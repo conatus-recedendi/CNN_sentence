@@ -77,62 +77,64 @@ def identity(x):
 def conv2d(input_data, filters, bias=None, stride=1, padding=0):
     """
     Optimized 2D convolution operation for sentence classification.
-    
+
     Args:
         input_data: (batch_size, channels, height, width)
         filters: (num_filters, channels, filter_height, filter_width)
         bias: (num_filters,) or None
         stride: int
         padding: int
-        
+
     Returns:
         Convolution output
     """
     batch_size, in_channels, in_height, in_width = input_data.shape
     num_filters, _, filter_height, filter_width = filters.shape
-    
+
     # Calculate output dimensions
     out_height = (in_height + 2 * padding - filter_height) // stride + 1
     out_width = (in_width + 2 * padding - filter_width) // stride + 1
-    
+
     # For sentence classification, we often have 1D convolution over sentences
     # This is optimized for that case
     if filter_width == in_width and padding == 0:
         # This is essentially 1D convolution over sentence length
         output = np.zeros((batch_size, num_filters, out_height, 1))
-        
+
         for b in range(batch_size):
             for f in range(num_filters):
                 for h in range(out_height):
                     h_start = h * stride
                     h_end = h_start + filter_height
-                    
+
                     # Extract region and compute dot product
-                    region = input_data[b, :, h_start:h_end, :]  # (channels, filter_height, width)
+                    region = input_data[
+                        b, :, h_start:h_end, :
+                    ]  # (channels, filter_height, width)
                     filter_f = filters[f]  # (channels, filter_height, filter_width)
-                    
+
                     # Compute convolution as element-wise multiplication and sum
                     conv_val = np.sum(region * filter_f)
-                    
+
                     if bias is not None:
                         conv_val += bias[f]
-                    
+
                     output[b, f, h, 0] = conv_val
     else:
         # General case - use original implementation
         # Pad input if necessary
         if padding > 0:
             padded_input = np.pad(
-                input_data, 
-                ((0, 0), (0, 0), (padding, padding), (padding, padding)), 
-                mode='constant'
+                input_data,
+                ((0, 0), (0, 0), (padding, padding), (padding, padding)),
+                mode="constant",
             )
         else:
             padded_input = input_data
-        
+
         # Initialize output
         output = np.zeros((batch_size, num_filters, out_height, out_width))
-        
+
         # Perform convolution
         for b in range(batch_size):
             for f in range(num_filters):
@@ -142,17 +144,17 @@ def conv2d(input_data, filters, bias=None, stride=1, padding=0):
                         h_end = h_start + filter_height
                         w_start = w * stride
                         w_end = w_start + filter_width
-                        
+
                         # Extract region
                         region = padded_input[b, :, h_start:h_end, w_start:w_end]
-                        
+
                         # Compute convolution
                         output[b, f, h, w] = np.sum(region * filters[f])
-                        
+
                         # Add bias if provided
                         if bias is not None:
                             output[b, f, h, w] += bias[f]
-    
+
     return output
 
 
@@ -381,7 +383,7 @@ def col2im(col, input_shape, filter_height, filter_width, stride=1, padding=0):
     out_height = (padded_height - filter_height) // stride + 1
     out_width = (padded_width - filter_width) // stride + 1
 
-    img = np.zeros((batch_size, channels
+    img = np.zeros((batch_size, channels, padded_height, padded_width))
 
     for y in range(filter_height):
         y_max = y + stride * out_height
@@ -401,12 +403,13 @@ class AdadeltaOptimizer:
     """
     Adadelta optimizer implementation
     """
+
     def __init__(self, rho=0.95, epsilon=1e-6):
         self.rho = rho
         self.epsilon = epsilon
         self.exp_sqr_grads = {}
         self.exp_sqr_updates = {}
-    
+
     def update(self, param, grad, param_name):
         """
         Update parameter using Adadelta
@@ -414,23 +417,27 @@ class AdadeltaOptimizer:
         if param_name not in self.exp_sqr_grads:
             self.exp_sqr_grads[param_name] = np.zeros_like(param)
             self.exp_sqr_updates[param_name] = np.zeros_like(param)
-        
+
         exp_sqr_grad = self.exp_sqr_grads[param_name]
         exp_sqr_update = self.exp_sqr_updates[param_name]
-        
+
         # Accumulate gradient
         exp_sqr_grad = self.rho * exp_sqr_grad + (1 - self.rho) * grad**2
-        
+
         # Compute update
-        update = -np.sqrt(exp_sqr_update + self.epsilon) / np.sqrt(exp_sqr_grad + self.epsilon) * grad
-        
+        update = (
+            -np.sqrt(exp_sqr_update + self.epsilon)
+            / np.sqrt(exp_sqr_grad + self.epsilon)
+            * grad
+        )
+
         # Accumulate updates
         exp_sqr_update = self.rho * exp_sqr_update + (1 - self.rho) * update**2
-        
+
         # Update stored values
         self.exp_sqr_grads[param_name] = exp_sqr_grad
         self.exp_sqr_updates[param_name] = exp_sqr_update
-        
+
         return param + update
 
 
@@ -438,9 +445,10 @@ class SGDOptimizer:
     """
     Simple SGD optimizer
     """
+
     def __init__(self, learning_rate=0.01):
         self.learning_rate = learning_rate
-    
+
     def update(self, param, grad, param_name=None):
         """
         Update parameter using SGD
