@@ -82,7 +82,7 @@ def load_bin_vec(fname, vocab):
             while True:
                 ch = f.read(1)
                 if ch == b" ":
-                    word = b"".join(word).decode("utf-8")
+                    word = b"".join(word)
                     break
                 if ch != b"\n":
                     word.append(ch)
