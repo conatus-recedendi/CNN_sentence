@@ -3,7 +3,7 @@ Sample code for
 Convolutional Neural Networks for Sentence Classification
 http://arxiv.org/pdf/1408.5882v2.pdf
 
-NumPy-based implementation (converted from Theano)
+NumPy-based implementation (optimized version)
 """
 
 import pickle
@@ -24,8 +24,8 @@ from conv_net_classes import (
     Iden,
     LeNetConvPoolLayer,
     MLPDropout,
-    softmax,
 )
+from utils import softmax
 
 
 def train_conv_net(
