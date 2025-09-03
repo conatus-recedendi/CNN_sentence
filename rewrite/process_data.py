@@ -13,7 +13,7 @@ def build_data_cv(data_folder, cv=10, clean_string=True):
     pos_file = data_folder[0]
     neg_file = data_folder[1]
     vocab = defaultdict(float)
-    with open(pos_file, "rb") as f:
+    with open(pos_file, "r") as f:
         for line in f:
             rev = []
             rev.append(line.strip())
@@ -31,7 +31,7 @@ def build_data_cv(data_folder, cv=10, clean_string=True):
                 "split": np.random.randint(0, cv),
             }
             revs.append(datum)
-    with open(neg_file, "rb") as f:
+    with open(neg_file, "r") as f:
         for line in f:
             rev = []
             rev.append(line.strip())
