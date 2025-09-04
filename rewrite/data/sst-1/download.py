@@ -259,3 +259,12 @@ class Sst(datasets.GeneratorBasedBuilder):
                             "tokens": tokens,
                             "tree": parse_tree,
                         }
+
+
+if __name__ == "__main__":
+    print("loading data...", end="")
+    sst_dataset = Sst()
+    sst_dataset.download_and_prepare()
+    print("data loaded!")
+    print(sst_dataset.as_dataset())
+# coding=utf-8
