@@ -6,7 +6,7 @@ import patoolib
 
 if __name__ == "__main__":
     url = "http://www.cs.uic.edu/~liub/FBS/CustomerReviewData.zip"
-    local_path = "."
+    local_path = "CustomerReviewData"
 
     print("Downloading and extracting the CR dataset...")
 
