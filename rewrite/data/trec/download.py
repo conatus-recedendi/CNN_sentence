@@ -16,6 +16,7 @@
 
 
 import datasets
+import pandas as pd
 
 
 _DESCRIPTION = """\
@@ -176,16 +177,12 @@ if __name__ == "__main__":
     for example in datasets["test"]:
         label = datasets["test"].features["coarse_label"]
         sentence = datasets["test"].features["text"]
-        test.append(
-            (label.int2str(example["coarse_label"]), sentence.str2str(example["text"]))
-        )
+        test.append((example["coarse_label"], example["text"]))
 
     for example in datasets["train"]:
         label = datasets["train"].features["coarse_label"]
         sentence = datasets["train"].features["text"]
-        train.append(
-            (label.int2str(example["coarse_label"]), sentence.str2str(example["text"]))
-        )
+        train.append((["coarse_label"], example["text"]))
 
     df_train = pd.DataFrame(train, columns=["label", "sentence"])
     df_test = pd.DataFrame(test, columns=["label", "sentence"])
