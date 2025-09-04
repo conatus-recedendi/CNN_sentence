@@ -267,4 +267,7 @@ if __name__ == "__main__":
     sst_dataset.download_and_prepare()
     print("data loaded!")
     print(sst_dataset.as_dataset())
+
+    # save in this file
+    sst_dataset.save_to_disk(".")
 # coding=utf-8
