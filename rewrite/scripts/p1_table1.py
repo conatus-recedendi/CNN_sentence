@@ -79,7 +79,7 @@ def load_bin_vec(fname):
     """
     Loads 300x1 word vecs from Google (Mikolov) word2vec
     """
-    word_vecs = {}
+    word_vecs = set()
     with open(fname, "rb") as f:
         header = f.readline()
         vocab_size, layer1_size = map(int, header.split())
@@ -94,7 +94,8 @@ def load_bin_vec(fname):
                 if ch != b"\n":
                     word.append(ch)
             # if word in vocab:
-            word_vecs[word] = np.frombuffer(f.read(binary_len), dtype="float32")
+            # word_vecs[word] = np.frombuffer(f.read(binary_len), dtype="float32")
+            word_vecs.add(word.decode("utf-8", errors="ignore"))
             # else:
             #     f.read(binary_len)
     return word_vecs
