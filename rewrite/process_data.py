@@ -134,8 +134,10 @@ def clean_str_sst(string):
 
 
 if __name__ == "__main__":
+    # ./process_data <word2vec_file> <output_file> <data_file1> <data_file2> ...
     w2v_file = sys.argv[1]
-    data_folder = ["rt-polarity.pos", "rt-polarity.neg"]
+    output_file = sys.argv[2]
+    data_folder = sys.argv[3:]
     print("loading data...", end="")
     revs, vocab = build_data_cv(data_folder, cv=10, clean_string=True)
     max_l = np.max(pd.DataFrame(revs)["num_words"])
@@ -152,5 +154,5 @@ if __name__ == "__main__":
     rand_vecs = {}
     add_unknown_words(rand_vecs, vocab)
     W2, _ = get_W(rand_vecs)
-    pickle.dump([revs, W, W2, word_idx_map, vocab], open("mr.p", "wb"))
+    pickle.dump([revs, W, W2, word_idx_map, vocab], open(output_file, "wb"))
     print("dataset created!")
