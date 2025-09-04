@@ -23,12 +23,13 @@ def parse_line(line: str) -> List[Tuple[int, str]]:
     left, right = line.split("##", 1)  # 첫 번째 ## 기준 분리
     labels = LABEL_RE.findall(left)
     if not labels:
-        # return [(1, right.strip())]  # 라벨이 없으면 긍정으로 간주
         return []
+        # return [(1, right.strip())]  # 라벨이 없으면 긍정으로 간주
 
     sentence = right.strip()
     # 부호만 중요(+ => 1, - => 0). 숫자 크기는 무시.
     out = []
+    lables = lables[:1]
     for sign, _num in labels:
         y = 1 if sign == "+" else 0
         out.append((y, sentence))
