@@ -284,16 +284,14 @@ if __name__ == "__main__":
         df = df.drop(0)
         df = df[["label", "sentence"]]
         # 5개로 분류
-        df["label"] = pd.cut(
-            df["label"], bins=[-0.1, 0.2, 0.4, 0.6, 0.8, 1.1], labels=[0, 1, 2, 3, 4]
-        )
+        df["label"] = pd.cut(df["label"], bins=[-0.1, 0.4, 0.6, 1.1], labels=[0, 2, 1])
         # remove 2
         # 0, 1 -> 0
         # 3, 4 -> 1
         # df["label"] = df["label"].astype(int)
         # df["label"] = df["label"].replace({0: 0, 1: 0, 3: 1, 4: 1})
         df = df[df["label"] != 2]
-        df["label"] = df["label"].replace({0: 0, 1: 0, 3: 1, 4: 1})
+        # df["label"] = df["label"].replace({0: 0, 1: 0, 3: 1, 4: 1})
         # shuffle
 
         df.to_csv(f"{split}.csv", index=False, header=False)
