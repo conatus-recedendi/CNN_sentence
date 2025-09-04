@@ -5,18 +5,20 @@ import sys, re
 import pandas as pd
 
 
-def build_data_cv(data_folder, cv=10, clean_string=True):
+def build_data_cv(data_files, cv=10, clean_string=True):
     """
     Loads data and split into 10 folds.
     """
     revs = []
-    pos_file = data_folder[0]
-    neg_file = data_folder[1]
     vocab = defaultdict(float)
-    with open(pos_file, "r", encoding="cp1252") as f:
-        for line in f:
-            rev = []
-            rev.append(line.strip())
+    # pos_file = data_folder[0]
+    # neg_file = data_folder[1]
+    for data_file in data_files:
+        with open(data_file, "r") as f:
+            for line in f:
+                left, right = line.split(",", 1)
+                rev = []
+                rev.append(right.strip())
             if clean_string:
                 orig_rev = clean_str(" ".join(rev))
             else:
@@ -25,30 +27,30 @@ def build_data_cv(data_folder, cv=10, clean_string=True):
             for word in words:
                 vocab[word] += 1
             datum = {
-                "y": 1,
+                "y": int(left),
                 "text": orig_rev,
                 "num_words": len(orig_rev.split()),
                 "split": np.random.randint(0, cv),
             }
             revs.append(datum)
-    with open(neg_file, "r", encoding="cp1252") as f:
-        for line in f:
-            rev = []
-            rev.append(line.strip())
-            if clean_string:
-                orig_rev = clean_str(" ".join(rev))
-            else:
-                orig_rev = " ".join(rev).lower()
-            words = set(orig_rev.split())
-            for word in words:
-                vocab[word] += 1
-            datum = {
-                "y": 0,
-                "text": orig_rev,
-                "num_words": len(orig_rev.split()),
-                "split": np.random.randint(0, cv),
-            }
-            revs.append(datum)
+    # with open(neg_file, "r", encoding="cp1252") as f:
+    #     for line in f:
+    #         rev = []
+    #         rev.append(line.strip())
+    #         if clean_string:
+    #             orig_rev = clean_str(" ".join(rev))
+    #         else:
+    #             orig_rev = " ".join(rev).lower()
+    #         words = set(orig_rev.split())
+    #         for word in words:
+    #             vocab[word] += 1
+    #         datum = {
+    #             "y": 0,
+    #             "text": orig_rev,
+    #             "num_words": len(orig_rev.split()),
+    #             "split": np.random.randint(0, cv),
+    #         }
+    #         revs.append(datum)
     return revs, vocab
 
 
