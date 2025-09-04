@@ -6,9 +6,9 @@ import pandas as pd
 if __name__ == "__main__":
     dataset = load_dataset("stanfordnlp/sst2")
     dataset = dataset["train"].train_test_split(test_size=0.1, seed=42)
-    dataset["validation"] = dataset["test"]
-    del dataset["test"]
-    for split in ["train", "test", "validation"]:
+    dataset["test"]
+    # del dataset["test"]
+    for split in ["train", "test"]:
         df = dataset[split].to_pandas()
         df = df.drop(0)
         df = df[["label", "sentence"]]
