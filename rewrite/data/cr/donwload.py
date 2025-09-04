@@ -83,7 +83,9 @@ if __name__ == "__main__":
         sentences = []
         labels = []
 
-        with os.scandir(os.path.join(local_path, "customer review data")) as it:
+        with os.scandir(
+            os.path.join("CustomerReviewData", "customer review data")
+        ) as it:
             for entry in it:
                 if entry.is_file() and entry.name.endswith(".txt"):
                     file_path = os.path.join(
