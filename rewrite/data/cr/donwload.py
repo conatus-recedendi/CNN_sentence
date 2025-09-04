@@ -16,9 +16,11 @@ if __name__ == "__main__":
         print("Download completed!")
 
         # RAR 압축 해제
-        patoolib.extract_archive(local_path, outdir="./CustomerReviewData")
-        # with rarfile.RarFile(local_path, "r") as rf:
-        #     rf.extractall("./CustomerReviewData")
+        # patoolib.extract_archive(local_path, outdir="./CustomerReviewData")
+        from unrar import rarfile
+
+        rf = rarfile.RarFile(local_path)
+        rf.extractall("./CustomerReviewData")
         print("Extraction completed!")
 
     except Exception as e:
