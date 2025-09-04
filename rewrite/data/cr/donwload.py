@@ -29,6 +29,10 @@ def parse_grouped_file(path: str, encoding: str = "utf-8") -> List[Tuple[int, st
             current_sentences = []
             current_sum = 0
             return
+        if current_sum == 0:
+            current_sum = 0
+            current_sentences = []
+            return
         label = 1 if current_sum > 0 else 0  # 0도 0으로 처리
         for s in current_sentences:
             results.append((label, s))
