@@ -6,7 +6,7 @@ import patoolib
 
 if __name__ == "__main__":
     url = "http://www.cs.uic.edu/~liub/FBS/CustomerReviewData.zip"
-    local_path = "CustomerReviewData"
+    local_path = "CustomerReviewData.zip"
 
     print("Downloading and extracting the CR dataset...")
 
@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
         # 압축 해제
         patoolib.extract_archive(
-            os.path.join(local_path, "CustomerReviewData.zip"), outdir=local_path
+            os.path.join(local_path), outdir="./CustomerReviewData"
         )
         print("Extraction completed!")
 
