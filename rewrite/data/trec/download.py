@@ -170,9 +170,31 @@ if __name__ == "__main__":
     trec_dataset.download_and_prepare()
 
     datasets = trec_dataset.as_dataset()
-    for split in datasets:
-        print(f"{split} examples:")
-        for example in datasets[split]:
-            print(example)
-            break
-        print()
+    test = []
+    train = []
+
+    for example in datasets["test"]:
+        label = datasets["test"].features["coarse_label"]
+        sentence = datasets["test"].features["text"]
+        test.append(
+            (label.int2str(example["coarse_label"]), sentence.str2str(example["text"]))
+        )
+
+    for example in datasets["train"]:
+        label = datasets["train"].features["coarse_label"]
+        sentence = datasets["train"].features["text"]
+        train.append(
+            (label.int2str(example["coarse_label"]), sentence.str2str(example["text"]))
+        )
+
+    df_train = pd.DataFrame(train, columns=["label", "sentence"])
+    df_test = pd.DataFrame(test, columns=["label", "sentence"])
+
+    df_train.to_csv("trec_train.csv", index=False, header=False)
+    df_test.to_csv("trec_test.csv", index=False, header=False)
+
+# train examples:
+# {'text': 'How did serfdom develop in and then leave Russia ?', 'coarse_label': 2, 'fine_label': 26}
+
+# test examples:
+# {'text': 'How far is it from Denver to Aspen ?', 'coarse_label': 5, 'fine_label': 40}
