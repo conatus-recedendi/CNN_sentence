@@ -44,9 +44,9 @@ if __name__ == "__main__":
             else:
                 train.append((labels[i], data[i]))
 
-    df_train = pd.DataFrame(train, columns=["label", "sentence"])
-    df_test = pd.DataFrame(test, columns=["label", "sentence"])
-    df_valid = pd.DataFrame(valid, columns=["label", "sentence"])
+    df_train = pd.DataFrame(train, columns=["label", "text"])
+    df_test = pd.DataFrame(test, columns=["label", "text"])
+    df_valid = pd.DataFrame(valid, columns=["label", "text"])
 
     df_train.to_csv("train.csv", index=False, header=False)
     df_test.to_csv("test.csv", index=False, header=False)
