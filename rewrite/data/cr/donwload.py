@@ -25,6 +25,7 @@ if __name__ == "__main__":
         print(f"[ERROR] Failed to download or extract: {e}")
 
     finally:
+        print("Process finished.")
         # 임시 파일 제거
         # if os.path.exists(local_path):
         #     os.remove(local_path)
