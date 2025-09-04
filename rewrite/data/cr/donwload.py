@@ -71,7 +71,7 @@ def parse_grouped_file(path: str, encoding: str = "utf-8") -> List[Tuple[int, st
                 val = int(num)
                 line_sum += val if sign == "+" else -val
             print("line_sum =", line_sum)
-            print("left  =", left)
+            print("right  =", right)
             current_sentences.append(right)
             current_sum += line_sum
 
