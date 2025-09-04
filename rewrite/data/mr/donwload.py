@@ -31,16 +31,23 @@ if __name__ == "__main__":
 
     test = []
     train = []
+    valid = []
 
     for i in range(len(data)):
         ran = random.randint(0, 9)
         if ran == 0:
             test.append((labels[i], data[i]))
         else:
-            train.append((labels[i], data[i]))
+            ran = random.randint(0, 9)
+            if ran == 0:
+                valid.append((labels[i], data[i]))
+            else:
+                train.append((labels[i], data[i]))
 
     df_train = pd.DataFrame(train, columns=["label", "sentence"])
     df_test = pd.DataFrame(test, columns=["label", "sentence"])
+    df_valid = pd.DataFrame(valid, columns=["label", "sentence"])
 
     df_train.to_csv("train.csv", index=False, header=False)
     df_test.to_csv("test.csv", index=False, header=False)
+    df_valid.to_csv("validation.csv", index=False, header=False)
