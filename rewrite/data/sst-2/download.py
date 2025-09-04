@@ -287,5 +287,11 @@ if __name__ == "__main__":
         # remove 2
         # 0, 1 -> 0
         # 3, 4 -> 1
+        # df["label"] = df["label"].astype(int)
+        # df["label"] = df["label"].replace({0: 0, 1: 0, 3: 1, 4: 1})
+        df = df[df["label"] != 2]
+        df["label"] = df["label"].astype(int)
         df["label"] = df["label"].replace({0: 0, 1: 0, 3: 1, 4: 1})
+        # shuffle
+
         df.to_csv(f"{split}.csv", index=False, header=False)
