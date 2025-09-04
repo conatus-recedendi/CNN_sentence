@@ -15,12 +15,15 @@ import zipfile
 
 if __name__ == "__main__":
     print("Downloading and extracting the MR dataset...")
-    url = "https://www.cs.uic.edu/~liub/FBS/CustomerReviewData.zip"
+    url = "http://www.cs.uic.edu/~liub/FBS/opinion-lexicon-English.rar"
 
-    urllib.request.urlretrieve(url, "CustomerReviewData.zip")
-    with zipfile.ZipFile("CustomerReviewData.zip", "r") as zip_ref:
+    urllib.request.urlretrieve(url, "CustomerReviewData.rar")
+    with zipfile.ZipFile("CustomerReviewData.rar", "r") as zip_ref:
         zip_ref.extractall(".")
-    os.remove("CustomerReviewData.zip")
+    os.remove("CustomerReviewData.rar")
+
+    # ./CustomerReviewData/negative-words.txt
+    # ./CustomerReviewData/positive-words.txt
 
     # "
 
