@@ -5,8 +5,8 @@ import urllib.request
 import patoolib
 
 if __name__ == "__main__":
-    url = "http://www.cs.uic.edu/~liub/FBS/opinion-lexicon-English.rar"
-    local_path = "CustomerReviewData.rar"
+    url = "http://www.cs.uic.edu/~liub/FBS/CustomerReviewData.zip"
+    local_path = "."
 
     print("Downloading and extracting the CR dataset...")
 
@@ -15,12 +15,10 @@ if __name__ == "__main__":
         urllib.request.urlretrieve(url, local_path)
         print("Download completed!")
 
-        # RAR 압축 해제
-        # patoolib.extract_archive(local_path, outdir="./CustomerReviewData")
-        from unrar import rarfile
-
-        rf = rarfile.RarFile(local_path)
-        rf.extractall("./CustomerReviewData")
+        # 압축 해제
+        patoolib.extract_archive(
+            os.path.join(local_path, "CustomerReviewData.zip"), outdir=local_path
+        )
         print("Extraction completed!")
 
     except Exception as e:
