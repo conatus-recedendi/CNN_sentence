@@ -293,7 +293,6 @@ if __name__ == "__main__":
         # df["label"] = df["label"].astype(int)
         # df["label"] = df["label"].replace({0: 0, 1: 0, 3: 1, 4: 1})
         df = df[df["label"] != 2]
-        df["label"] = df["label"].astype(int)
         df["label"] = df["label"].replace({0: 0, 1: 0, 3: 1, 4: 1})
         # shuffle
 
