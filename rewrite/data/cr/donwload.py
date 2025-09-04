@@ -46,17 +46,17 @@ def parse_grouped_file(path: str, encoding: str = "utf-8") -> List[Tuple[int, st
                 continue
 
             # 설명 라인 후보: " ... ]##문장 " 형태만 수집
-            print(line)
+            # print(line)
             # enter wait
-            input()
+            # input()
             if "##" not in line:
-                print("skip: no ##")
+                # print("skip: no ##")
                 continue
 
             left, right = line.split("##", 1)
             right = right.strip()
             if not right:
-                print("skip: no right")
+                # print("skip: no right")
                 continue
 
             # 설명 라인 왼쪽에서 라벨(복수 가능) 모두합
@@ -70,8 +70,8 @@ def parse_grouped_file(path: str, encoding: str = "utf-8") -> List[Tuple[int, st
             for sign, num in labels:
                 val = int(num)
                 line_sum += val if sign == "+" else -val
-            print("line_sum =", line_sum)
-            print("right  =", right)
+            # print("line_sum =", line_sum)
+            # print("right  =", right)
             current_sentences.append(right)
             current_sum += line_sum
 
