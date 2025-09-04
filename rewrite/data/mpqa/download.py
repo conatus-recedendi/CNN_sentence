@@ -1,6 +1,6 @@
 from datasets import load_dataset
 
-ds = load_dataset("SetFit/TREC-QC")
+ds = load_dataset("rahulsikder223/SentEval-MPQA")
 
 
 import pandas as pd
