@@ -276,8 +276,11 @@ if __name__ == "__main__":
     # dataset train/test/validation에서
     # 0번째 줄 제거
     # sentence,label 행만 남기고 제거
-    for split in ["train", "test", "validation"]:
+    for split in ["train", "test"]:
         df = dataset[split].to_pandas()
+        if split == "train":
+            # validation + train => train
+            df += dataset["validation"].to_pandas()
         df = df.drop(0)
         df = df[["label", "sentence"]]
         # 5개로 분류
