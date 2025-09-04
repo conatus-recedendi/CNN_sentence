@@ -28,5 +28,10 @@ if __name__ == "__main__":
         for line in f:
             data.append(line.strip())
             labels.append(0)
-    df = pd.DataFrame({"sentence": data, "label": labels})
+    df = pd.DataFrame(
+        {
+            "label": labels,
+            "sentence": data,
+        }
+    )
     df.to_csv("cr.csv", index=False)
