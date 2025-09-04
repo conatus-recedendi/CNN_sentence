@@ -26,5 +26,5 @@ if __name__ == "__main__":
 
     finally:
         # 임시 파일 제거
-        if os.path.exists(local_path):
-            os.remove(local_path)
+        # if os.path.exists(local_path):
+        #     os.remove(local_path)
