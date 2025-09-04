@@ -75,7 +75,7 @@ def stats_for_dataset(ds_dir: Path, embeddings_vocab: set | None):
     }
 
 
-def load_bin_vec(fname, vocab):
+def load_bin_vec(fname):
     """
     Loads 300x1 word vecs from Google (Mikolov) word2vec
     """
@@ -93,10 +93,10 @@ def load_bin_vec(fname, vocab):
                     break
                 if ch != b"\n":
                     word.append(ch)
-            if word in vocab:
-                word_vecs[word] = np.frombuffer(f.read(binary_len), dtype="float32")
-            else:
-                f.read(binary_len)
+            # if word in vocab:
+            word_vecs[word] = np.frombuffer(f.read(binary_len), dtype="float32")
+            # else:
+            #     f.read(binary_len)
     return word_vecs
 
 
