@@ -22,6 +22,8 @@ def parse_line(line: str) -> List[Tuple[int, str]]:
         return []
     left, right = line.split("##", 1)  # 첫 번째 ## 기준 분리
     labels = LABEL_RE.findall(left)
+    if line.find("[t]") != -1:
+        return []
     if not labels:
         # return []
         return [(0, right.strip())]  # 라벨이 없으면 긍정으로 간주
