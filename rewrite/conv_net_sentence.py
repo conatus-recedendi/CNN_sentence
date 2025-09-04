@@ -61,7 +61,7 @@ def train_conv_net(
     for filter_h in filter_hs:
         filter_shapes.append((feature_maps, 1, filter_h, filter_w))
         pool_sizes.append((img_h - filter_h + 1, img_w - filter_w + 1))
-    
+
     parameters = [
         ("image shape", img_h, img_w),
         ("filter shape", filter_shapes),
@@ -227,7 +227,7 @@ def train_conv_net(
                 layer1_input = np.concatenate(conv_outputs, axis=1)
                 error = classifier.errors(layer1_input, batch_y)
                 test_errors.append(error)
-            
+
             test_perf = 1 - np.mean(test_errors)
 
     return test_perf
@@ -268,13 +268,16 @@ def make_idx_data_cv(revs, word_idx_map, cv, max_l=51, k=300, filter_h=5):
 
 
 if __name__ == "__main__":
+    # python ./conv_net_sentence.py mr.p -nonstatic -word2vec
     print("loading data...", end="")
-    x = pickle.load(open("mr.p", "rb"))
+    train_file = sys.argv[1]
+
+    x = pickle.load(open(train_file, "rb"))
     revs, W, W2, word_idx_map, vocab = x[0], x[1], x[2], x[3], x[4]
     print("data loaded!")
 
-    mode = sys.argv[1] if len(sys.argv) > 1 else "-static"
-    word_vectors = sys.argv[2] if len(sys.argv) > 2 else "-rand"
+    mode = sys.argv[2] if len(sys.argv) > 2 else "-static"
+    word_vectors = sys.argv[3] if len(sys.argv) > 3 else "-rand"
 
     if mode == "-nonstatic":
         print("model architecture: CNN-non-static")
