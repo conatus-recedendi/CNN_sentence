@@ -12,13 +12,13 @@ if __name__ == "__main__":
     valid = []
 
     for example in ds["test"]:
-        test.append((example["label"], example["text"]))
+        test.append((example["label"], example["sentence"]))
 
     for example in ds["train"]:
-        train.append((example["label"], example["text"]))
+        train.append((example["label"], example["sentence"]))
 
     for example in ds["validation"]:
-        valid.append((example["label"], example["text"]))
+        valid.append((example["label"], example["sentence"]))
 
     df_train = pd.DataFrame(train, columns=["label", "text"])
     df_test = pd.DataFrame(test, columns=["label", "text"])
