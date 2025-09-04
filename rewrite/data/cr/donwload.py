@@ -24,15 +24,18 @@ def parse_line(line: str) -> List[Tuple[int, str]]:
     labels = LABEL_RE.findall(left)
     if line.find("[t]") != -1:
         return []
+
     # if not labels:
-    # return []
-    # return [(0, right.strip())]  # 라벨이 없으면 긍정으로 간주
+    #     return []
+    #     return [(0, right.strip())]  # 라벨이 없으면 긍정으로 간주
 
     sentence = right.strip()
     # 부호만 중요(+ => 1, - => 0). 숫자 크기는 무시.
     out = []
     for sign, _num in labels:
         y = 1 if sign == "+" else 0
+        if line.find("[s]") != -1:
+            y = 1
         out.append((y, sentence))
         # break
     return out
