@@ -32,7 +32,7 @@ def parse_line(line: str) -> List[Tuple[int, str]]:
     for sign, _num in labels:
         y = 1 if sign == "+" else 0
         out.append((y, sentence))
-        break
+        # break
     return out
 
 
