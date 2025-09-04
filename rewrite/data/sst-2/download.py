@@ -13,5 +13,5 @@ if __name__ == "__main__":
         df = df.drop(0)
         df = df[["label", "sentence"]]
         # 2개로 분류
-        df["label"] = pd.cut(df["label"], bins=[0.0, 0.5, 1.0], labels=[0, 1])
+        df["label"] = pd.cut(df["label"], bins=[-0.1, 0.5, 1.1], labels=[0, 1])
         df.to_csv(f"sst_{split}.csv", index=False, header=False)

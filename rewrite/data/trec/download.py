@@ -162,3 +162,17 @@ class Trec(datasets.GeneratorBasedBuilder):
                     "coarse_label": coarse_label,
                     "fine_label": fine_label,
                 }
+
+
+if __name__ == "__main__":
+
+    trec_dataset = Trec()
+    trec_dataset.download_and_prepare()
+
+    datasets = trec_dataset.as_dataset()
+    for split in datasets:
+        print(f"{split} examples:")
+        for example in datasets[split]:
+            print(example)
+            break
+        print()
