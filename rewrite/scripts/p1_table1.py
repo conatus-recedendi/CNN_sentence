@@ -5,6 +5,7 @@
 # Otherwise, |Vpre| is set to None.
 import os, re, pandas as pd
 from pathlib import Path
+import numpy as np
 
 DATA_ROOT = Path("../data")
 
@@ -74,6 +75,31 @@ def stats_for_dataset(ds_dir: Path, embeddings_vocab: set | None):
     }
 
 
+def load_bin_vec(fname, vocab):
+    """
+    Loads 300x1 word vecs from Google (Mikolov) word2vec
+    """
+    word_vecs = {}
+    with open(fname, "rb") as f:
+        header = f.readline()
+        vocab_size, layer1_size = map(int, header.split())
+        binary_len = np.dtype("float32").itemsize * layer1_size
+        for line in range(vocab_size):
+            word = []
+            while True:
+                ch = f.read(1)
+                if ch == b" ":
+                    word = b"".join(word)
+                    break
+                if ch != b"\n":
+                    word.append(ch)
+            if word in vocab:
+                word_vecs[word] = np.frombuffer(f.read(binary_len), dtype="float32")
+            else:
+                f.read(binary_len)
+    return word_vecs
+
+
 def load_embeddings_vocab(vec_path: Path):
     if not vec_path.exists():
         return None
@@ -98,7 +124,9 @@ def load_embeddings_vocab(vec_path: Path):
 
 
 # Load embeddings once if available
-emb_vocab = load_embeddings_vocab(Path("./embeddings.vec"))
+# emb_vocab = load_embeddings_vocab(Path("./embeddings.vec"))
+emb_vocab = load_bin_vec(Path("../GoogleNews-vectors-negative300.bin"))
+
 
 # Discover datasets: immediate subfolders of ./data that contain any of train.csv/test.csv
 rows = []
