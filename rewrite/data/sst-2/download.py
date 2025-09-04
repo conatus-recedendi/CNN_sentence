@@ -23,4 +23,4 @@ if __name__ == "__main__":
 
     df_train.to_csv("train.csv", index=False, header=False)
     df_test.to_csv("test.csv", index=False, header=False)
-    df_valid.to_csv("valid.csv", index=False, header=False)
+    df_valid.to_csv("validation.csv", index=False, header=False)
