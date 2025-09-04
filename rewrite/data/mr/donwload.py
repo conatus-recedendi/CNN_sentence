@@ -42,5 +42,5 @@ if __name__ == "__main__":
     df_train = pd.DataFrame(train, columns=["label", "sentence"])
     df_test = pd.DataFrame(test, columns=["label", "sentence"])
 
-    df_train.to_csv("cr_train.csv", index=False, header=False)
-    df_test.to_csv("cr_test.csv", index=False, header=False)
+    df_train.to_csv("train.csv", index=False, header=False)
+    df_test.to_csv("test.csv", index=False, header=False)
