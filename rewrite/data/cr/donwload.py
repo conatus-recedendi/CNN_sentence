@@ -108,7 +108,7 @@ if __name__ == "__main__":
         for root, _, files in os.walk(base_dir):
             for name in files:
                 if name.lower().endswith(".txt"):
-                    if name == "README.txt":
+                    if name.lower() == "readme.txt":
                         continue
                     fp = os.path.join(root, name)
                     print(f"[parse] {fp}")
