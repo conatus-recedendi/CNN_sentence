@@ -8,10 +8,10 @@ if __name__ == "__main__":
     train = []
 
     for example in ds["test"]:
-        test.append((example["label"], example["text"]))
+        test.append((example["label"], example["sentence"]))
 
     for example in ds["train"]:
-        train.append((example["label"], example["text"]))
+        train.append((example["label"], example["sentence"]))
 
     df_train = pd.DataFrame(train, columns=["label", "sentence"])
     df_test = pd.DataFrame(test, columns=["label", "sentence"])
