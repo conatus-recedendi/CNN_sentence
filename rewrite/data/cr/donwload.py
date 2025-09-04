@@ -89,7 +89,7 @@ if __name__ == "__main__":
             for entry in it:
                 if entry.is_file() and entry.name.endswith(".txt"):
                     file_path = os.path.join(
-                        local_path, "customer review data", entry.name
+                        "CustomerReviewData", "customer review data", entry.name
                     )
                     print(f"Parsing file: {file_path}")
                     parsed = parse_file(file_path, encoding="utf-8")
