@@ -1,6 +1,8 @@
 import os
 import urllib.request
-import rarfile  # pip install rarfile
+
+# import rarfile  # pip install rarfile
+import patoolib
 
 if __name__ == "__main__":
     url = "http://www.cs.uic.edu/~liub/FBS/opinion-lexicon-English.rar"
@@ -14,8 +16,9 @@ if __name__ == "__main__":
         print("Download completed!")
 
         # RAR 압축 해제
-        with rarfile.RarFile(local_path, "r") as rf:
-            rf.extractall("./CustomerReviewData")
+        patoolib.extract_archive(local_path, outdir="./CustomerReviewData")
+        # with rarfile.RarFile(local_path, "r") as rf:
+        #     rf.extractall("./CustomerReviewData")
         print("Extraction completed!")
 
     except Exception as e:
