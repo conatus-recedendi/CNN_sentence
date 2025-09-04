@@ -19,20 +19,20 @@ def build_data_cv(data_files, cv=10, clean_string=True):
                 left, right = line.split(",", 1)
                 rev = []
                 rev.append(right.strip())
-            if clean_string:
-                orig_rev = clean_str(" ".join(rev))
-            else:
-                orig_rev = " ".join(rev).lower()
-            words = set(orig_rev.split())
-            for word in words:
-                vocab[word] += 1
-            datum = {
-                "y": int(left),
-                "text": orig_rev,
-                "num_words": len(orig_rev.split()),
-                "split": np.random.randint(0, cv),
-            }
-            revs.append(datum)
+                if clean_string:
+                    orig_rev = clean_str(" ".join(rev))
+                else:
+                    orig_rev = " ".join(rev).lower()
+                words = set(orig_rev.split())
+                for word in words:
+                    vocab[word] += 1
+                datum = {
+                    "y": int(left),
+                    "text": orig_rev,
+                    "num_words": len(orig_rev.split()),
+                    "split": np.random.randint(0, cv),
+                }
+                revs.append(datum)
     # with open(neg_file, "r", encoding="cp1252") as f:
     #     for line in f:
     #         rev = []
