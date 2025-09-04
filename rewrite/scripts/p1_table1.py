@@ -6,7 +6,7 @@
 import os, re, pandas as pd
 from pathlib import Path
 
-DATA_ROOT = Path("./data")
+DATA_ROOT = Path("../data")
 
 
 def read_split_csv(path: Path):
@@ -118,9 +118,9 @@ df_out = pd.DataFrame(
     rows, index=names, columns=["c", "l", "N", "|V|", "|Vpre|", "Test"]
 )
 # Save and display
-out_csv = "/mnt/data/dataset_stats.csv"
+out_csv = "p1_table1.csv"
 df_out.to_csv(out_csv, encoding="utf-8")
-from caas_jupyter_tools import display_dataframe_to_user
+# from caas_jupyter_tools import display_dataframe_to_user
 
-display_dataframe_to_user("Dataset statistics", df_out)
-out_csv
+# display_dataframe_to_user("Dataset statistics", df_out)
+# out_csv
