@@ -46,25 +46,32 @@ def parse_grouped_file(path: str, encoding: str = "utf-8") -> List[Tuple[int, st
                 continue
 
             # 설명 라인 후보: " ... ]##문장 " 형태만 수집
+            print(line)
+            # enter wait
+            input()
             if "##" not in line:
+                print("skip: no ##")
                 continue
+
             left, right = line.split("##", 1)
             right = right.strip()
             if not right:
+                print("skip: no right")
                 continue
 
             # 설명 라인 왼쪽에서 라벨(복수 가능) 모두합
             labels = LABEL_RE.findall(left)
             # 라벨이 없는 설명 라인은 스킵 (원칙에 맞춤)
-            if not labels:
-                continue
+            # if not labels:
+            #     continue
 
             # 부호*숫자를 누적
             line_sum = 0
             for sign, num in labels:
                 val = int(num)
                 line_sum += val if sign == "+" else -val
-
+            print("line_sum =", line_sum)
+            print("left  =", left)
             current_sentences.append(right)
             current_sum += line_sum
 
