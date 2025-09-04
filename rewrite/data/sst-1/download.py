@@ -269,8 +269,17 @@ if __name__ == "__main__":
     # print(sst_dataset.as_dataset())
     dataset = sst_dataset.as_dataset()
 
-    dataset["train"].to_csv("sst_train.csv")  # save in this file
-    dataset["test"].to_csv("sst_test.csv")  # save in this file
+    # dataset["train"].to_csv("sst_train.csv")  # save in this file
+    # dataset["test"].to_csv("sst_test.csv")  # save in this file
+    # dataset["validation"].to_csv("sst_dev.csv")
+    # dataset train/test/validation에서
+    # 0번째 줄 제거
+    # sentence,label 행만 남기고 제거
+    for split in ["train", "test", "validation"]:
+        df = dataset[split].to_pandas()
+        df = df.drop(0)
+        df = df[["sentence", "label"]]
+        df.to_csv(f"sst_{split}.csv", index=False)
 
     # save in this file
 
