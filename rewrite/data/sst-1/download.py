@@ -270,7 +270,7 @@ if __name__ == "__main__":
     dataset = sst_dataset.as_dataset()
 
     dataset["train"].to_csv("sst_train.csv")  # save in this file
-    dataset["validation"].to_csv("sst_dev.csv")  # save in this file
+    dataset["test"].to_csv("sst_test.csv")  # save in this file
 
     # save in this file
 
