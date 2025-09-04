@@ -13,10 +13,11 @@ if __name__ == "__main__":
         test.append((example["label"], example["text"]))
 
     for example in ds["train"]:
-        train.append((example["label"], example["text"]))
-
-    for example in ds["validation"]:
-        valid.append((example["label"], example["text"]))
+        ran = random.randint(0, 9)
+        if ran == 0:
+            valid.append((example["label"], example["text"]))
+        else:
+            train.append((example["label"], example["text"]))
 
     df_train = pd.DataFrame(train, columns=["label", "text"])
     df_test = pd.DataFrame(test, columns=["label", "text"])
