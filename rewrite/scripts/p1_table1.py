@@ -45,7 +45,8 @@ def tokenize(s: str):
 def stats_for_dataset(ds_dir: Path, embeddings_vocab: set | None):
     train = read_split_csv(ds_dir / "train.csv")
     test = read_split_csv(ds_dir / "test.csv")
-    all_df = pd.concat([train, test], ignore_index=True)
+    valid = read_split_csv(ds_dir / "validation.csv")
+    all_df = pd.concat([train, test, valid], ignore_index=True)
     # Classes (unique labels in combined)
     c = all_df["label"].nunique(dropna=True)
     # Average sentence length over combined
