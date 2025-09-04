@@ -24,7 +24,7 @@ def parse_line(line: str) -> List[Tuple[int, str]]:
     labels = LABEL_RE.findall(left)
     if not labels:
         # return []
-        return [(1, right.strip())]  # 라벨이 없으면 긍정으로 간주
+        return [(0, right.strip())]  # 라벨이 없으면 긍정으로 간주
 
     sentence = right.strip()
     # 부호만 중요(+ => 1, - => 0). 숫자 크기는 무시.
