@@ -108,6 +108,8 @@ if __name__ == "__main__":
         for root, _, files in os.walk(base_dir):
             for name in files:
                 if name.lower().endswith(".txt"):
+                    if name == "README.txt":
+                        continue
                     fp = os.path.join(root, name)
                     print(f"[parse] {fp}")
                     all_pairs.extend(parse_grouped_file(fp, encoding="utf-8"))
