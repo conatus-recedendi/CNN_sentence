@@ -29,10 +29,10 @@ def parse_line(line: str) -> List[Tuple[int, str]]:
     sentence = right.strip()
     # 부호만 중요(+ => 1, - => 0). 숫자 크기는 무시.
     out = []
-    lables = [lables[0]]
     for sign, _num in labels:
         y = 1 if sign == "+" else 0
         out.append((y, sentence))
+        break
     return out
 
 
