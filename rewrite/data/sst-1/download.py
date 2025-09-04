@@ -284,4 +284,4 @@ if __name__ == "__main__":
         df["label"] = pd.cut(
             df["label"], bins=[0.0, 0.2, 0.4, 0.6, 0.8, 1.0], labels=[0, 1, 2, 3, 4]
         )
-        df.to_csv(f"sst_{split}.csv", index=False)
+        df.to_csv(f"sst_{split}.csv", index=False, header=False)
