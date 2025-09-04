@@ -1,49 +1,26 @@
-# subjectivity dataset v1.0
-# http://www.cs.cornell.edu/people/pabo/movie-review-data/rotten_imdb.tar.gz
-
-import random
+from datasets import load_dataset
 import pandas as pd
-import os
-import tarfile
-import urllib.request
 
+ds = load_dataset("SetFit/subj")
 
 if __name__ == "__main__":
-    url = "http://www.cs.cornell.edu/people/pabo/movie-review-data/rotten_imdb.tar.gz"
-
-    urllib.request.urlretrieve(url, "rotten_imdb.tar.gz")
-    tar = tarfile.open("rotten_imdb.tar.gz", "r:gz")
-    tar.extractall(path="./")
-    tar.close()
-    os.remove("rotten_imdb.tar.gz")
-
-    data = []
-    # subjective
-    with open("quote.tok.gt9.5000", "r", encoding="latin-1") as f:
-        for line in f:
-            sentence = line.strip()
-            data.append((1, sentence[1]))
-
-    # objective
-    with open("plot.tok.gt9.5000", "r", encoding="latin-1") as f:
-        for line in f:
-            sentence = line.strip()
-            data.append((0, sentence[1]))
-
     test = []
     train = []
+    valid = []
 
-    for i in range(len(data)):
-        ran = random.randint(0, 9)
-        if ran == 0:
-            test.append(data[i])
-        else:
-            train.append(data[i])
+    for example in ds["test"]:
+        test.append((example["label"], example["text"]))
 
-    df_train = pd.DataFrame(train, columns=["label", "sentence"])
-    df_test = pd.DataFrame(test, columns=["label", "sentence"])
+    for example in ds["train"]:
+        train.append((example["label"], example["text"]))
+
+    for example in ds["validation"]:
+        valid.append((example["label"], example["text"]))
+
+    df_train = pd.DataFrame(train, columns=["label", "text"])
+    df_test = pd.DataFrame(test, columns=["label", "text"])
+    df_valid = pd.DataFrame(valid, columns=["label", "text"])
 
     df_train.to_csv("train.csv", index=False, header=False)
     df_test.to_csv("test.csv", index=False, header=False)
-
-# http://www.cs.cornell.edu/people/pabo/movie-review-data/rotten_imdb.tar.gz
+    df_valid.to_csv("validation.csv", index=False, header=False)
