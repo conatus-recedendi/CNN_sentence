@@ -183,6 +183,7 @@ def train_conv_net_pytorch(
 
     training_time = time.time() - start_time
     print(f"\nTraining completed in {training_time:.2f} seconds")
+    print(f"\nTraining completed in {training_time:.2f} seconds", file=sys.stderr)
     print(f"Best validation accuracy: {training_results['best_val_acc']:.4f}")
 
     # Test evaluation
@@ -409,7 +410,6 @@ def main():
             f"Using validation data as test with {len(train_val_datasets[1])} samples"
         )
     #   #
-    print(torch.cuda.is_available(), file=sys.stderr)
     # Train model
     perf = train_conv_net_pytorch(
         datasets=datasets,
