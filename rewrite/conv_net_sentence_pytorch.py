@@ -368,7 +368,10 @@ def main():
     print(train_val_datasets[0].shape, train_val_datasets[1].shape)
     if test_data is not None:
         # Use separate test file
-        datasets = [train_val_datasets[0], test_data]  # [train, test]
+        datasets = [
+            train_val_datasets[0] + train_val_datasets[1],
+            test_data,
+        ]  # [train, test]
         print(f"Using separate test file with {len(test_data)} samples")
     else:
         # Fallback to using validation as test
