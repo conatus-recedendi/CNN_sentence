@@ -106,6 +106,7 @@ def train_conv_net_pytorch(
     clip_grad_norm=3.0,
     early_stopping_patience=10,
     device=None,
+    word_idx_map=None,
 ):
     """
     Train CNN using PyTorch
@@ -218,6 +219,18 @@ def train_conv_net_pytorch(
     # Confusion matrix
     cm = confusion_matrix(all_predictions, all_targets, num_classes=num_classes)
     print_confusion_matrix(cm, ["Negative", "Positive"])
+
+    # p1_table3
+    keywords = {
+        "bad": ["good", "terrible", "horrible", "lousy"],
+        "good": ["great", "bad", "terrific", "decent"],
+        "n't": ["os", "ca", "ireland", "wo"],
+        "!": ["2,500", "entire", "jez", "changer"],
+        ",": ["decasia", "abysmally", "demise", "valiant"],
+    }
+    # for keyword in keywords:
+    #     word_idx_map[keyword] = 1  # 임시로 1로 설정
+    #     for
 
     return test_accuracy
 
@@ -463,6 +476,7 @@ def main():
         optimizer_type=args.optimizer,
         learning_rate=args.lr,
         early_stopping_patience=5,
+        word_idx_map=word_idx_map,
         device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
     )
 
