@@ -361,18 +361,22 @@ def main():
     # Set model parameters
     if args.mode == "nonstatic":
         print("Model architecture: CNN-non-static")
+        print("Model architecture: CNN-non-static", file=sys.stderr)
         static_embeddings = False
     else:
         print("Model architecture: CNN-static")
+        print("Model architecture: CNN-static", file=sys.stderr)
         static_embeddings = True
 
     # print(W2[3])
     # print(W[3])
     if args.embeddings == "rand":
         print("Using: random vectors")
+        print("Using: random vectors", file=sys.stderr)
         embeddings = W2
     else:
         print("Using: word2vec vectors")
+        print("Using: word2vec vectors", file=sys.stderr)
         embeddings = W
 
     vocab_size = embeddings.shape[0]
@@ -405,7 +409,7 @@ def main():
             f"Using validation data as test with {len(train_val_datasets[1])} samples"
         )
     #   #
-    print(torch.cuda.is_available())
+    print(torch.cuda.is_available(), file=sys.stderr)
     # Train model
     perf = train_conv_net_pytorch(
         datasets=datasets,
@@ -421,6 +425,8 @@ def main():
     )
 
     print(f"Final test performance: {perf:.4f}")
+    # print to error
+    print(f"Final test performance: {perf:.4f}", file=sys.stderr)
 
 
 if __name__ == "__main__":
