@@ -231,10 +231,10 @@ def make_idx_data_splits(revs, word_idx_map, max_l=51, k=300, filter_h=5):
     for rev in revs:
         sent = get_idx_from_sent(rev["text"], word_idx_map, max_l, k, filter_h)
         sent.append(rev["y"])
-        if rev["split"] == 0:  # training data
-            train.append(sent)
-        elif rev["split"] == 1:  # validation data
+        if rev["split"] == 0:
             validation.append(sent)
+        else:
+            train.append(sent)
 
     train = np.array(train, dtype="int")
     validation = np.array(validation, dtype="int")
