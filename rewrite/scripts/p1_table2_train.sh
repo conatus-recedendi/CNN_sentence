@@ -17,16 +17,18 @@ cd ..
 for d in ${DATA[@]}; do
     echo "Processing $d dataset..."
     python process_data.py GoogleNews-vectors-negative300.bin $d.p ./data/$d/validation.csv ./data/$d/train.csv
+    python process_data.py GoogleNews-vectors-negative300.bin $d.p ./data/$d/train.csv ./data/$d/validation.csv 
 
     echo "CNN-rand"
-    python conv_net_sentence.py $d.p -nonstatic -rand
+    python conv_net_sentence_pytorch.py $d.p nonstatic rand --test-file ./data/$d/test.csv --epochs 25
     echo "CNN-static"
-    python conv_net_sentence.py $d.p -nonstatic -word2vec
+    python conv_net_sentence_pytorch.py $d.p static rand --test-file ./data/$d/test.csv --epochs 25
     echo "CNN-non-static"
-    python conv_net_sentence.py $d.p -static -word2vec
+    python conv_net_sentence_pytorch.py $d.p nonstatic word2vec --test-file ./data/$d/test.csv --epochs 25
     echo "CNN-multichannel"
     # not impmlemtend
     # python conv_net_sentence.py $d.p -static -rand
+
 done
 
 
