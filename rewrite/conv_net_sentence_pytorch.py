@@ -90,7 +90,7 @@ def train_conv_net_pytorch(
     optimizer_type="adadelta",
     learning_rate=1.0,
     clip_grad_norm=9.0,
-    early_stopping_patience=5,
+    early_stopping_patience=10,
     device=None,
 ):
     """
