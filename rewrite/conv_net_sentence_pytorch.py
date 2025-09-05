@@ -67,7 +67,6 @@ def prepare_data(datasets, batch_size=50):
     print(f"  Validation samples: {len(val_sentences)}")
     print(f"  Test samples: {len(test_sentences)}")
     print(f"  Max sentence length: {max_length}")
-
     # Create data loaders
     train_loader, val_loader, test_loader = create_data_loaders(
         (train_sentences, train_labels),
@@ -366,7 +365,7 @@ def main():
     test_data = load_test_data(
         args.test_file, word_idx_map, max_l=56, k=300, filter_h=5
     )
-
+    print(train_val_datasets[0].shape, train_val_datasets[1].shape)
     if test_data is not None:
         # Use separate test file
         datasets = [train_val_datasets[0], test_data]  # [train, test]
