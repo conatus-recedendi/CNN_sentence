@@ -245,9 +245,9 @@ def main():
         description="CNN for Sentence Classification (PyTorch)"
     )
     parser.add_argument("data_file", help="Pickled data file (mr.p)")
-    parser.add_argument("mode", choices=["-static", "-nonstatic"], help="Training mode")
+    parser.add_argument("mode", choices=["static", "nonstatic"], help="Training mode")
     parser.add_argument(
-        "embeddings", choices=["-rand", "-word2vec"], help="Word embeddings to use"
+        "embeddings", choices=["rand", "word2vec"], help="Word embeddings to use"
     )
     parser.add_argument("--epochs", type=int, default=25, help="Number of epochs")
     parser.add_argument("--batch-size", type=int, default=50, help="Batch size")
@@ -279,14 +279,14 @@ def main():
     print(f"Vocabulary size: {len(vocab)}")
 
     # Set model parameters
-    if args.mode == "-nonstatic":
+    if args.mode == "nonstatic":
         print("Model architecture: CNN-non-static")
         static_embeddings = False
     else:
         print("Model architecture: CNN-static")
         static_embeddings = True
 
-    if args.embeddings == "-rand":
+    if args.embeddings == "rand":
         print("Using: random vectors")
         embeddings = W2
     else:
@@ -363,8 +363,8 @@ if __name__ == "__main__":
         sys.argv = [
             "conv_net_sentence_pytorch.py",
             "mr.p",
-            "-nonstatic",
-            "-rand",
+            "nonstatic",
+            "rand",
             "--single-fold",
             "0",
             "--epochs",
