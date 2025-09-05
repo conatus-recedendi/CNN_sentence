@@ -243,6 +243,8 @@ class CNNTrainer:
 
             # Forward pass
             logits = self.model(batch_x)
+
+            print(logits.shape, batch_y.shape)
             loss = self.criterion(logits, batch_y)
 
             # Backward pass
