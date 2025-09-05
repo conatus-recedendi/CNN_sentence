@@ -405,6 +405,7 @@ def main():
             f"Using validation data as test with {len(train_val_datasets[1])} samples"
         )
     #   #
+    print(torch.cuda.is_available())
     # Train model
     perf = train_conv_net_pytorch(
         datasets=datasets,
