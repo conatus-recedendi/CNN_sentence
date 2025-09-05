@@ -47,7 +47,7 @@ class HiddenLayer(object):
         self.use_bias = use_bias
 
         if W is None:
-            if hasattr(activation, '__name__') and activation.__name__ == "ReLU":
+            if hasattr(activation, "__name__") and activation.__name__ == "ReLU":
                 W_values = np.asarray(
                     0.01 * rng.standard_normal(size=(n_in, n_out)),
                     dtype=np.float32,
@@ -189,7 +189,7 @@ class MLPDropout(object):
         # Forward through hidden layers
         for i, layer in enumerate(layers[:-1]):
             if training and hasattr(layer, "forward"):
-                if hasattr(layer, 'dropout_rate'):
+                if hasattr(layer, "dropout_rate"):
                     next_layer_input = layer.forward(next_layer_input, training=True)
                 else:
                     next_layer_input = layer.forward(next_layer_input)
@@ -199,6 +199,12 @@ class MLPDropout(object):
         # Output layer
         output = layers[-1].forward(next_layer_input)
         return output
+
+    def backward(self, input_data, y):
+        dout = 1
+        dout = self.output_layer.backward(dout, input_data, y)
+
+        raise NotImplementedError("Backward pass is not implemented.")
 
     def negative_log_likelihood(self, input_data, y):
         """Compute negative log likelihood for training"""
@@ -246,6 +252,27 @@ class LogisticRegression(object):
         """Forward pass through logistic regression"""
         linear_output = np.dot(input_data, self.W) + self.b
         return softmax(linear_output)
+
+    def backward(self, input_data, y):
+        """Backward pass through logistic regression"""
+        batch_size = input_data.shape[0]
+        p_y_given_x = self.forward(input_data)
+        dy = p_y_given_x
+        dy[range(batch_size), y] -= 1
+        dy /= batch_size
+
+        dW = np.dot(input_data.T, dy)
+        db = np.sum(dy, axis=0)
+
+        # Gradient w.r.t. input data
+        dinput = np.dot(dy, self.W.T)
+
+        # Update weights and biases (this is a simple SGD step; in practice, use an optimizer)
+        learning_rate = 0.01
+        self.W -= learning_rate * dW
+        self.b -= learning_rate * db
+
+        return dinput
 
     def negative_log_likelihood(self, input_data, y):
         """Compute negative log likelihood"""

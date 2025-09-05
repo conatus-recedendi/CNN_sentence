@@ -176,8 +176,9 @@ def train_conv_net(
             # Forward pass through MLP and compute cost
             cost = classifier.negative_log_likelihood(layer1_input, batch_y)
 
-            # Simple gradient descent (we skip the complex Adadelta for simplicity)
-            # In a full implementation, you would compute gradients and update parameters
+            # Backward pass
+            classifier_errors = classifier.errors(layer1_input, batch_y)
+            classifier_grad = classifier.gradients(layer1_input, batch_y)
 
             # Reset word vectors to zero for padding
             if non_static:
