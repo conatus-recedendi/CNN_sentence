@@ -214,7 +214,7 @@ def train_conv_net_pytorch(
     print(f"  F1-score: {metrics['f1']:.4f}")
 
     # Confusion matrix
-    cm = confusion_matrix(all_predictions, all_targets)
+    cm = confusion_matrix(all_predictions, all_targets, num_classes=num_classes)
     print_confusion_matrix(cm, ["Negative", "Positive"])
 
     return test_accuracy
