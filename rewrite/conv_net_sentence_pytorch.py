@@ -1,6 +1,19 @@
 """
 PyTorch implementation of CNN for Sentence Classification
-With GPU support and complete training pipeline
+With GPU support andef train_conv_net_pytorch(
+    datasets,
+    embeddings,
+    vocab_size,
+    num_classes,
+    batch_size=50,
+    n_epochs=25,
+    static_embeddings=False,
+    optimizer_type="adadelta",
+    learning_rate=1.0,
+    clip_grad_norm=9.0,
+    early_stopping_patience=5,
+    device=None,
+):aining pipeline
 """
 
 import pickle
@@ -99,6 +112,7 @@ def train_conv_net_pytorch(
         datasets: [train_data, test_data]
         embeddings: pretrained word embeddings
         vocab_size: vocabulary size
+        num_classes: number of classes
         batch_size: batch size
         n_epochs: number of epochs
         static_embeddings: whether to freeze embeddings
@@ -126,7 +140,7 @@ def train_conv_net_pytorch(
         embed_dim=300,
         filter_sizes=[3, 4, 5],
         num_filters=100,
-        num_classes=2,
+        num_classes=num_classes,
         dropout_rate=0.5,
         static_embeddings=static_embeddings,
         pretrained_embeddings=embeddings,
@@ -337,6 +351,11 @@ def main():
     print(f"Number of sentences: {len(revs)}")
     print(f"Vocabulary size: {len(vocab)}")
 
+    # Calculate number of classes from the data
+    unique_labels = set(rev["y"] for rev in revs)
+    num_classes = len(unique_labels)
+    print(f"Number of classes: {num_classes} (labels: {sorted(unique_labels)})")
+
     # Set model parameters
     if args.mode == "nonstatic":
         print("Model architecture: CNN-non-static")
@@ -387,6 +406,7 @@ def main():
         datasets=datasets,
         embeddings=embeddings,
         vocab_size=vocab_size,
+        num_classes=num_classes,
         batch_size=args.batch_size,
         n_epochs=args.epochs,
         static_embeddings=static_embeddings,
