@@ -96,6 +96,7 @@ def train_conv_net_pytorch(
     datasets,
     embeddings,
     vocab_size,
+    num_classes,
     batch_size=50,
     n_epochs=25,
     static_embeddings=False,
