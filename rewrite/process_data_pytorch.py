@@ -168,6 +168,14 @@ if __name__ == "__main__":
     add_unknown_words(w2v, vocab)
     W, word_idx_map = get_W(w2v)
 
+    # Word2vec coverage 분석
+    if os.path.exists(w2v_file):
+        w2v_coverage = len([w for w in vocab if w in w2v and w != "<UNK>"])
+        total_vocab = len(vocab)
+        coverage_rate = w2v_coverage / total_vocab * 100
+        print(f"Word2vec coverage: {w2v_coverage}/{total_vocab} ({coverage_rate:.2f}%)")
+        print(f"Unknown words filled with random vectors: {total_vocab - w2v_coverage}")
+
     # Create random vectors for comparison
     rand_vecs = {}
     add_unknown_words(rand_vecs, vocab)
@@ -175,6 +183,17 @@ if __name__ == "__main__":
 
     print(f"Vocabulary size: {len(vocab)}")
     print(f"Word vectors shape: {W.shape}")
+
+    # 벡터 분포 분석
+    print("\nVector distribution analysis:")
+    print(f"Word2vec vectors - Mean: {W[1:].mean():.6f}, Std: {W[1:].std():.6f}")
+    print(f"Random vectors - Mean: {W2[1:].mean():.6f}, Std: {W2[1:].std():.6f}")
+
+    # 벡터 norm 비교
+    w2v_norms = np.linalg.norm(W[1:], axis=1)
+    rand_norms = np.linalg.norm(W2[1:], axis=1)
+    print(f"Word2vec norms - Mean: {w2v_norms.mean():.6f}, Std: {w2v_norms.std():.6f}")
+    print(f"Random norms - Mean: {rand_norms.mean():.6f}, Std: {rand_norms.std():.6f}")
 
     # Save processed data
     print("Saving processed data...")

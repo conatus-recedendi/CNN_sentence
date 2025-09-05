@@ -228,14 +228,28 @@ def get_idx_from_sent(sent, word_idx_map, max_l=51, k=300, filter_h=5):
     """
     x = []
     pad = filter_h - 1
+
+    # Add padding at the beginning
     for i in range(pad):
         x.append(0)
+
+    # Convert words to indices
     words = sent.split()
     for word in words:
         if word in word_idx_map:
             x.append(word_idx_map[word])
-    while len(x) < max_l + 2 * pad:
-        x.append(0)
+        else:
+            x.append(0)  # Unknown word -> 0
+
+    # Truncate if too long, pad if too short
+    target_length = max_l + 2 * pad
+    if len(x) > target_length:
+        x = x[:target_length]  # Truncate
+    else:
+        # Pad to target length
+        while len(x) < target_length:
+            x.append(0)
+
     return x
 
 
@@ -245,13 +259,40 @@ def make_idx_data_splits(revs, word_idx_map, max_l=51, k=300, filter_h=5):
     Returns [train_data, validation_data] where split=0 is train, split=1 is validation
     """
     train, validation = [], []
+
+    # Debug: 실제 데이터 분포 확인
+    split_counts = {}
+    sentence_lengths = []
+
+    for rev in revs:
+        split_val = rev["split"]
+        split_counts[split_val] = split_counts.get(split_val, 0) + 1
+        sentence_lengths.append(len(rev["text"].split()))
+
+    print(f"Split distribution: {split_counts}")
+    print(f"Actual max sentence length: {max(sentence_lengths)}")
+    print(f"Using max_l: {max_l}")
+
+    # 실제 최대 길이가 max_l보다 크면 조정
+    actual_max_l = max(max_l, max(sentence_lengths))
+    if actual_max_l > max_l:
+        print(f"Adjusting max_l from {max_l} to {actual_max_l}")
+        max_l = actual_max_l
+
     for rev in revs:
         sent = get_idx_from_sent(rev["text"], word_idx_map, max_l, k, filter_h)
         sent.append(rev["y"])
+
+        # 원래 논문에서는 split=0이 첫 번째 fold이므로 train으로 사용
         if rev["split"] == 0:
+            train.append(sent)
+        elif rev["split"] == 1:
             validation.append(sent)
+        # 다른 split 값들은 무시하거나 train에 추가
         else:
             train.append(sent)
+
+    print(f"Train samples: {len(train)}, Validation samples: {len(validation)}")
 
     train = np.array(train, dtype="int")
     validation = np.array(validation, dtype="int")
