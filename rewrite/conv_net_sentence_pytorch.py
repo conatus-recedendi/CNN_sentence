@@ -229,7 +229,7 @@ def train_conv_net_pytorch(
     #     ",": ["decasia", "abysmally", "demise", "valiant"],
     # }
     keywords = ["bad", "good", "n't", "!", ","]
-    model.embedding.weight.detach()
+    # model.embedding.weight.detach()
     for keyword in keywords:
         keyword_idx = word_idx_map[keyword]
         # find most similar words
@@ -241,8 +241,8 @@ def train_conv_net_pytorch(
             if other_word == keyword:
                 continue
             dist = np.linalg.norm(
-                model.embedding.weight[keyword_idx].cpu().numpy()
-                - model.embedding.weight[other_idx].cpu().numpy()
+                model.embedding.weight.detach()[keyword_idx].cpu().numpy()
+                - model.embedding.weight.detach()[other_idx].cpu().numpy()
             )
             if len(most_similar) < topk:
                 most_similar.append((other_word, dist))
