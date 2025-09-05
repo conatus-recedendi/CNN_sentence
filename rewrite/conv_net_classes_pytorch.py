@@ -244,7 +244,8 @@ class CNNTrainer:
             # Forward pass
             logits = self.model(batch_x)
 
-            print(logits.shape, batch_y.shape)
+            # Ensure target is 1D for CrossEntropyLoss
+            batch_y = batch_y.squeeze()
             loss = self.criterion(logits, batch_y)
 
             # Backward pass
@@ -278,7 +279,7 @@ class CNNTrainer:
         with torch.no_grad():
             for batch_x, batch_y in data_loader:
                 batch_x = batch_x.to(self.device)
-                batch_y = batch_y.to(self.device)
+                batch_y = batch_y.to(self.device).squeeze()
 
                 # Forward pass
                 logits = self.model(batch_x)
