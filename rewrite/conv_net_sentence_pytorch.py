@@ -74,9 +74,6 @@ def prepare_data(datasets, batch_size=50):
     # Find max length
     all_sentences = train_sentences + val_sentences + test_sentences
     max_length = max(len(sent) for sent in all_sentences)
-    vocab_size = (
-        max(max(word_id for sent in all_sentences for word_id in sent), default=0) + 1
-    )  # +1 for padding index 0
 
     print(f"Dataset statistics:")
     print(f"  Train samples: {len(train_sentences)}")
@@ -84,7 +81,6 @@ def prepare_data(datasets, batch_size=50):
     print(f"  Test samples: {len(test_sentences)}")
     print(f"  Max sentence length: {max_length}")
     print(train_sentences[100])
-    print(vocab_size)
     # Create data loaders
     train_loader, val_loader, test_loader = create_data_loaders(
         (train_sentences, train_labels),
