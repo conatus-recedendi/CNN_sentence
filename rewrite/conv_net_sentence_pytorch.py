@@ -223,21 +223,82 @@ def get_idx_from_sent(sent, word_idx_map, max_l=51, k=300, filter_h=5):
     return x
 
 
-def make_idx_data_cv(revs, word_idx_map, cv, max_l=51, k=300, filter_h=5):
+def make_idx_data_splits(revs, word_idx_map, max_l=51, k=300, filter_h=5):
     """
-    Transforms sentences into a 2-d matrix.
+    Transforms sentences into train/validation splits based on existing split field.
+    Returns [train_data, validation_data] where split=0 is train, split=1 is validation
     """
-    train, test = [], []
+    train, validation = [], []
     for rev in revs:
         sent = get_idx_from_sent(rev["text"], word_idx_map, max_l, k, filter_h)
         sent.append(rev["y"])
-        if rev["split"] == cv:
-            test.append(sent)
-        else:
+        if rev["split"] == 0:  # training data
             train.append(sent)
+        elif rev["split"] == 1:  # validation data
+            validation.append(sent)
+
     train = np.array(train, dtype="int")
-    test = np.array(test, dtype="int")
-    return [train, test]
+    validation = np.array(validation, dtype="int")
+    return [train, validation]
+
+
+def load_test_data(test_file_path, word_idx_map, max_l=51, k=300, filter_h=5):
+    """
+    Load test data from separate CSV file
+    """
+    try:
+        # Simple CSV parsing without pandas
+        test_data = []
+
+        with open(test_file_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+
+            # Skip header if exists
+            start_idx = (
+                1
+                if lines[0].strip().lower().startswith(("text", "sentence", "review"))
+                else 0
+            )
+
+            for line in lines[start_idx:]:
+                line = line.strip()
+                if not line:
+                    continue
+
+                # Assuming format: "text,label" or "label,text"
+                parts = line.split(",")
+                if len(parts) >= 2:
+                    # Try both orders: text,label and label,text
+                    try:
+                        # Try text,label format first
+                        text = ",".join(parts[:-1]).strip().strip("\"'")
+                        label = int(parts[-1].strip())
+                    except ValueError:
+                        # Try label,text format
+                        try:
+                            label = int(parts[0].strip())
+                            text = ",".join(parts[1:]).strip().strip("\"'")
+                        except ValueError:
+                            continue
+
+                    sent = get_idx_from_sent(text, word_idx_map, max_l, k, filter_h)
+                    sent.append(label)
+                    test_data.append(sent)
+
+        if test_data:
+            test_data = np.array(test_data, dtype="int")
+            print(f"Loaded {len(test_data)} test samples from {test_file_path}")
+            return test_data
+        else:
+            print(f"No valid data found in {test_file_path}")
+            return None
+
+    except FileNotFoundError:
+        print(f"Test file {test_file_path} not found. Using validation data as test.")
+        return None
+    except Exception as e:
+        print(f"Error loading test file: {e}")
+        return None
 
 
 def main():
@@ -259,9 +320,8 @@ def main():
         help="Optimizer",
     )
     parser.add_argument("--seed", type=int, default=42, help="Random seed")
-    parser.add_argument("--cv-folds", type=int, default=10, help="Number of CV folds")
     parser.add_argument(
-        "--single-fold", type=int, default=None, help="Run single fold (0-9)"
+        "--test-file", type=str, default="test.csv", help="Test data CSV file"
     )
 
     args = parser.parse_args()
@@ -295,66 +355,42 @@ def main():
 
     vocab_size = embeddings.shape[0]
 
-    # Run cross-validation or single fold
-    if args.single_fold is not None:
-        print(f"\nRunning single fold: {args.single_fold}")
-        datasets = make_idx_data_cv(
-            revs, word_idx_map, args.single_fold, max_l=56, k=300, filter_h=5
-        )
+    # Prepare train/validation data from pickle
+    print("\nPreparing train/validation data from pickle...")
+    train_val_datasets = make_idx_data_splits(
+        revs, word_idx_map, max_l=56, k=300, filter_h=5
+    )
 
-        perf = train_conv_net_pytorch(
-            datasets=datasets,
-            embeddings=embeddings,
-            vocab_size=vocab_size,
-            batch_size=args.batch_size,
-            n_epochs=args.epochs,
-            static_embeddings=static_embeddings,
-            optimizer_type=args.optimizer,
-            learning_rate=args.lr,
-        )
+    # Load test data from separate CSV file
+    print(f"Loading test data from {args.test_file}...")
+    test_data = load_test_data(
+        args.test_file, word_idx_map, max_l=56, k=300, filter_h=5
+    )
 
-        print(f"Fold {args.single_fold} performance: {perf:.4f}")
-
+    if test_data is not None:
+        # Use separate test file
+        datasets = [train_val_datasets[0], test_data]  # [train, test]
+        print(f"Using separate test file with {len(test_data)} samples")
     else:
-        print(f"\nRunning {args.cv_folds}-fold cross-validation")
-        results = []
+        # Fallback to using validation as test
+        datasets = train_val_datasets  # [train, validation_as_test]
+        print(
+            f"Using validation data as test with {len(train_val_datasets[1])} samples"
+        )
 
-        for i in range(args.cv_folds):
-            print(f"\n{'='*50}")
-            print(f"Cross-validation fold {i+1}/{args.cv_folds}")
-            print(f"{'='*50}")
+    # Train model
+    perf = train_conv_net_pytorch(
+        datasets=datasets,
+        embeddings=embeddings,
+        vocab_size=vocab_size,
+        batch_size=args.batch_size,
+        n_epochs=args.epochs,
+        static_embeddings=static_embeddings,
+        optimizer_type=args.optimizer,
+        learning_rate=args.lr,
+    )
 
-            datasets = make_idx_data_cv(
-                revs, word_idx_map, i, max_l=56, k=300, filter_h=5
-            )
-
-            perf = train_conv_net_pytorch(
-                datasets=datasets,
-                embeddings=embeddings,
-                vocab_size=vocab_size,
-                batch_size=args.batch_size,
-                n_epochs=args.epochs,
-                static_embeddings=static_embeddings,
-                optimizer_type=args.optimizer,
-                learning_rate=args.lr,
-            )
-
-            print(f"Fold {i} performance: {perf:.4f}")
-            results.append(perf)
-
-        print(f"\n{'='*50}")
-        print("Cross-validation Results:")
-        print(f"{'='*50}")
-
-        for i, result in enumerate(results):
-            print(f"Fold {i}: {result:.4f}")
-
-        mean_perf = np.mean(results)
-        std_perf = np.std(results)
-
-        print(f"\nMean performance: {mean_perf:.4f} ± {std_perf:.4f}")
-        print(f"Best fold: {np.max(results):.4f}")
-        print(f"Worst fold: {np.min(results):.4f}")
+    print(f"Final test performance: {perf:.4f}")
 
 
 if __name__ == "__main__":
@@ -365,8 +401,6 @@ if __name__ == "__main__":
             "mr.p",
             "nonstatic",
             "rand",
-            "--single-fold",
-            "0",
             "--epochs",
             "3",
         ]
