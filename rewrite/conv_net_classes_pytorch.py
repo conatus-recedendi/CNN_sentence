@@ -303,7 +303,7 @@ class CNNTrainer:
         optimizer,
         num_epochs,
         clip_grad_norm=9.0,
-        early_stopping_patience=5,
+        early_stopping_patience=10,
     ):
         """
         Complete training loop with early stopping
