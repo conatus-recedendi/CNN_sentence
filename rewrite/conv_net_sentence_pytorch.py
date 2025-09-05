@@ -80,7 +80,7 @@ def prepare_data(datasets, batch_size=50):
     print(f"  Validation samples: {len(val_sentences)}")
     print(f"  Test samples: {len(test_sentences)}")
     print(f"  Max sentence length: {max_length}")
-    print(train_sentences[0])
+    print(train_sentences[10])
     # Create data loaders
     train_loader, val_loader, test_loader = create_data_loaders(
         (train_sentences, train_labels),
