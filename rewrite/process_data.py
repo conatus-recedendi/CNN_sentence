@@ -5,7 +5,7 @@ import sys, re
 import pandas as pd
 
 
-def build_data_cv(data_files, cv=10, clean_string=True):
+def build_data_cv(data_files, cv=10, clean_string=True, TREC=False):
     """
     Loads data and split into 10 folds.
     """
@@ -20,7 +20,7 @@ def build_data_cv(data_files, cv=10, clean_string=True):
                 rev = []
                 rev.append(right.strip())
                 if clean_string:
-                    orig_rev = clean_str(" ".join(rev))
+                    orig_rev = clean_str(" ".join(rev), TREC=TREC)
                 else:
                     orig_rev = " ".join(rev).lower()
                 words = set(orig_rev.split())
@@ -105,7 +105,7 @@ def add_unknown_words(word_vecs, vocab, min_df=1, k=300):
             word_vecs[word] = np.random.uniform(-0.25, 0.25, k)
 
 
-def clean_str(string, TREC=True):
+def clean_str(string, TREC=False):
     """
     Tokenization/string cleaning for all datasets except for SST.
     Every dataset is lower cased except for TREC
@@ -138,10 +138,15 @@ def clean_str_sst(string):
 if __name__ == "__main__":
     # ./process_data <word2vec_file> <output_file> <data_file1> <data_file2> ...
     w2v_file = sys.argv[1]
-    output_file = sys.argv[2]
+    output_file = sys.argv[2]  # trec.p
     data_folder = sys.argv[3:]
     print("loading data...", end="")
-    revs, vocab = build_data_cv(data_folder, cv=10, clean_string=True)
+    revs, vocab = build_data_cv(
+        data_folder,
+        cv=10,
+        clean_string=True,
+        TREC=output_file.lower().startswith("trec"),
+    )
     max_l = np.max(pd.DataFrame(revs)["num_words"])
     print("data loaded!")
     print("number of sentences: " + str(len(revs)))
