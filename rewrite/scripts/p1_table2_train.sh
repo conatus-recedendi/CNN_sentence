@@ -22,7 +22,7 @@ for d in ${DATA[@]}; do
     echo "CNN-rand"
     python conv_net_sentence_pytorch.py $d.p nonstatic rand --test-file ./data/$d/test.csv --epochs 25
     echo "CNN-static"
-    python conv_net_sentence_pytorch.py $d.p static rand --test-file ./data/$d/test.csv --epochs 25
+    python conv_net_sentence_pytorch.py $d.p static word2vec --test-file ./data/$d/test.csv --epochs 25
     echo "CNN-non-static"
     python conv_net_sentence_pytorch.py $d.p nonstatic word2vec --test-file ./data/$d/test.csv --epochs 25
     echo "CNN-multichannel"
