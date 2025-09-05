@@ -229,6 +229,7 @@ def train_conv_net_pytorch(
     #     ",": ["decasia", "abysmally", "demise", "valiant"],
     # }
     keywords = ["bad", "good", "n't", "!", ","]
+    model.embedding.weight.detach()
     for keyword in keywords:
         keyword_idx = word_idx_map[keyword]
         # find most similar words
