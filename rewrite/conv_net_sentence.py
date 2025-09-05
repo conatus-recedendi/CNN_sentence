@@ -128,6 +128,11 @@ def train_conv_net(
 
     # Training loop
     print("... training")
+    print("length of train set: " + str(train_set_x.shape[0]))
+    print("length of test set: " + str(test_set_x.shape[0]))
+    print("length of val set: " + str(val_set_x.shape[0]))
+    print("number of batches: " + str(n_batches))
+    print("number of train batches: " + str(n_train_batches))
     epoch = 0
     best_val_perf = 0
     val_perf = 0
