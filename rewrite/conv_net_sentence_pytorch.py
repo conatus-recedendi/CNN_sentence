@@ -369,7 +369,9 @@ def main():
     if test_data is not None:
         # Use separate test file
         datasets = [
-            train_val_datasets[0] + train_val_datasets[1],
+            # #nucpy concatate train and validation for training
+            # train_val_datasets[0] + train_val_datasets[1], # ValueError: operands could not be broadcast together with shapes (8663,65) (931,65) !
+            np.concatenate([train_val_datasets[0], train_val_datasets[1]], axis=0),
             test_data,
         ]  # [train, test]
         print(f"Using separate test file with {len(test_data)} samples")
