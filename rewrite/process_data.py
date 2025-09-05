@@ -93,7 +93,7 @@ def load_bin_vec(fname, vocab):
                 # print(vocab)
             if word in vocab:
                 word_vecs[word] = np.frombuffer(f.read(binary_len), dtype="float32")
-                if line < 10:
+                if line < 100:
                     print(f"Found word vector for {word}: {word_vecs[word]}")
             else:
                 f.read(binary_len)
