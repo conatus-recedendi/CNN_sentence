@@ -249,7 +249,10 @@ def train_conv_net_pytorch(
             elif dist < most_similar[-1][1]:
                 most_similar[-1] = (other_word, dist)
                 most_similar.sort(key=lambda x: x[1])
-        print(f"Most similar words to '{keyword}': {[w for w, d in most_similar]}")
+        print(
+            f"Most similar words to '{keyword}': {[w for w, d in most_similar]}",
+            file=sys.stderr,
+        )
 
     return test_accuracy
 
