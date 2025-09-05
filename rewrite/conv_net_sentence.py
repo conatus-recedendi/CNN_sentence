@@ -312,7 +312,7 @@ if __name__ == "__main__":
             hidden_units=[100, 2],
             shuffle_batch=True,
             n_epochs=25,
-            sqr_norm_lim=9,
+            sqr_norm_lim=3,
             non_static=non_static,
             batch_size=50,
             dropout_rate=[0.5],

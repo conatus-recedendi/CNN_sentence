@@ -34,11 +34,11 @@ if __name__ == "__main__":
     valid = []
 
     for i in range(len(data)):
-        ran = random.randint(0, 9)
+        ran = random.randint(0, 10)
         if ran == 0:
             test.append((labels[i], data[i]))
         else:
-            ran = random.randint(0, 9)
+            ran = random.randint(0, 10)
             if ran == 0:
                 valid.append((labels[i], data[i]))
             else:

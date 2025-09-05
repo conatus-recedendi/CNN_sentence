@@ -13,7 +13,7 @@ if __name__ == "__main__":
         test.append((example["label"], example["text"]))
 
     for example in ds["train"]:
-        ran = random.randint(0, 9)
+        ran = random.randint(0, 10)
         if ran == 0:
             valid.append((example["label"], example["text"]))
         else:
