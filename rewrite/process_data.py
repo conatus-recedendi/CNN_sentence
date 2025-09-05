@@ -90,7 +90,7 @@ def load_bin_vec(fname, vocab):
                     word.append(ch)
             if line < 10:
                 print(f"Processing word {line}: {word.decode('utf-8')}")
-                print(vocab)
+                # print(vocab)
             if word in vocab:
                 word_vecs[word] = np.frombuffer(f.read(binary_len), dtype="float32")
                 if line < 10:
