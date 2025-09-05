@@ -399,7 +399,7 @@ def main():
     unique_labels = set(rev["y"] for rev in revs)
     num_classes = len(unique_labels)
     print(f"Number of classes: {num_classes} (labels: {sorted(unique_labels)})")
-
+    print(f"Data: {args.data_file}", file=sys.stderr)
     # Set model parameters
     if args.mode == "nonstatic":
         print("Model architecture: CNN-non-static")
@@ -462,13 +462,14 @@ def main():
         static_embeddings=static_embeddings,
         optimizer_type=args.optimizer,
         learning_rate=args.lr,
-        early_stopping_patience=15,
+        early_stopping_patience=5,
         device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
     )
 
     print(f"Final test performance: {perf:.4f}")
     # print to error
     print(f"Final test performance: {perf:.4f}", file=sys.stderr)
+    print(f"=================================", file=sys.stderr)
 
 
 if __name__ == "__main__":
