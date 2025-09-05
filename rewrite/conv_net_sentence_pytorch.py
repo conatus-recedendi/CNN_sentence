@@ -365,8 +365,8 @@ def main():
         print("Model architecture: CNN-static")
         static_embeddings = True
 
-    print(W2[3])
-    print(W[3])
+    # print(W2[3])
+    # print(W[3])
     if args.embeddings == "rand":
         print("Using: random vectors")
         embeddings = W2
