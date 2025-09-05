@@ -157,4 +157,6 @@ if __name__ == "__main__":
     add_unknown_words(rand_vecs, vocab)
     W2, _ = get_W(rand_vecs)
     pickle.dump([revs, W, W2, word_idx_map, vocab], open(output_file, "wb"))
+    print(W2[3])
+    print(W[3])
     print("dataset created!")
