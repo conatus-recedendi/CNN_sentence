@@ -11,14 +11,14 @@ if __name__ == "__main__":
     valid = []
 
     for example in ds["test"]:
-        test.append((example["label"], example["text"]))
+        test.append((example["label_coarse"], example["text"]))
 
     for example in ds["train"]:
         ran = random.randint(0, 9)
         if ran == 0:
-            valid.append((example["label"], example["text"]))
+            valid.append((example["label_coarse"], example["text"]))
         else:
-            train.append((example["label"], example["text"]))
+            train.append((example["label_coarse"], example["text"]))
 
     # for example in ds["validation"]:
     #     valid.append((example["label"], example["text"]))

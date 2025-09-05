@@ -150,7 +150,7 @@ if __name__ == "__main__":
         data_folder,
         cv=10,
         clean_string=True,
-        TREC=False,
+        TREC=output_file.lower().startswith("trec"),
     )
     max_l = np.max(pd.DataFrame(revs)["num_words"])
     print("data loaded!")
