@@ -221,16 +221,35 @@ def train_conv_net_pytorch(
     print_confusion_matrix(cm, ["Negative", "Positive"])
 
     # p1_table3
-    keywords = {
-        "bad": ["good", "terrible", "horrible", "lousy"],
-        "good": ["great", "bad", "terrific", "decent"],
-        "n't": ["os", "ca", "ireland", "wo"],
-        "!": ["2,500", "entire", "jez", "changer"],
-        ",": ["decasia", "abysmally", "demise", "valiant"],
-    }
-    # for keyword in keywords:
-    #     word_idx_map[keyword] = 1  # 임시로 1로 설정
-    #     for
+    # keywords = {
+    #     "bad": ["good", "terrible", "horrible", "lousy"],
+    #     "good": ["great", "bad", "terrific", "decent"],
+    #     "n't": ["os", "ca", "ireland", "wo"],
+    #     "!": ["2,500", "entire", "jez", "changer"],
+    #     ",": ["decasia", "abysmally", "demise", "valiant"],
+    # }
+    keywords = ["bad", "good", "n't", "!", ","]
+    for keyword in keywords:
+        keyword_idx = word_idx_map[keyword]
+        # find most similar words
+        min_dist = float("inf")
+        # top K = 5
+        topk = 5
+        most_similar = []
+        for other_word, other_idx in word_idx_map.items():
+            if other_word == keyword:
+                continue
+            dist = np.linalg.norm(
+                model.embedding.weight[keyword_idx].cpu().numpy()
+                - model.embedding.weight[other_idx].cpu().numpy()
+            )
+            if len(most_similar) < topk:
+                most_similar.append((other_word, dist))
+                most_similar.sort(key=lambda x: x[1])
+            elif dist < most_similar[-1][1]:
+                most_similar[-1] = (other_word, dist)
+                most_similar.sort(key=lambda x: x[1])
+        print(f"Most similar words to '{keyword}': {[w for w, d in most_similar]}")
 
     return test_accuracy
 
