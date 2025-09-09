@@ -101,7 +101,35 @@ def load_bin_vec(fname, vocab):
     return word_vecs
 
 
-def add_unknown_words(word_vecs, vocab, min_df=1, k=300, variance=0.25):
+def get_variance_of_word_vectors(fname):
+    """
+    Get variance of word vectors from a binary word2vec file
+    """
+    word_vecs = {}
+    with open(fname, "rb") as f:
+        header = f.readline()
+        vocab_size, layer1_size = map(int, header.split())
+        binary_len = np.dtype("float32").itemsize * layer1_size
+        for line in range(vocab_size):
+            word = []
+            while True:
+                ch = f.read(1)
+                if ch == b" ":
+                    word = b"".join(word)
+                    break
+                if ch != b"\n":
+                    word.append(ch)
+            if line < 10:
+                print(f"Processing word {line}: {word.decode('utf-8')}")
+                # print(vocab)
+            word = word.decode("utf-8")
+            word_vecs[word] = np.frombuffer(f.read(binary_len), dtype="float32")
+    print(f"Loaded {len(word_vecs)} word vectors.")
+    return np.var(list(word_vecs.values()))
+    # return word_vecs
+
+
+def add_unknown_words(word_vecs, vocab, min_df=1, k=300, variance=0.25):  #
     """
     For words that occur in at least min_df documents, create a separate word vector.
     0.25 is chosen so the unknown vectors have (approximately) same variance as pre-trained ones
