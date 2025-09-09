@@ -177,7 +177,12 @@ class CNNSentenceClassifier(nn.Module):
         self.dropout = nn.Dropout(dropout_rate)
 
         # Fully connected layer
-        self.fc = nn.Linear(len(filter_sizes) * num_filters, num_classes)
+        # For multichannel: each filter produces 2*num_filters output
+        fc_input_dim = len(filter_sizes) * num_filters
+        if static_embeddings == "multichannel":
+            fc_input_dim = len(filter_sizes) * num_filters * 2  # 2 channels
+
+        self.fc = nn.Linear(fc_input_dim, num_classes)
 
         # Initialize FC layer
         nn.init.xavier_uniform_(self.fc.weight)
@@ -190,7 +195,9 @@ class CNNSentenceClassifier(nn.Module):
         embedded = self.embedding(x)  # (batch_size, seq_len, embed_dim)
         if self.static_embeddings == "multichannel":
             embedded_multi = self.embedding_multi(x)
-            embedded_multi.weight.data[0].fill_(0)
+            # Reset padding embeddings to zero for both channels
+            # self.embedding.weight.data[0].fill_(0)
+            self.embedding_multi.weight.data[0].fill_(0)
             embedded = torch.stack([embedded, embedded_multi], dim=1)
 
         # Reset padding embeddings to zero (for non-static case)
@@ -199,12 +206,22 @@ class CNNSentenceClassifier(nn.Module):
 
         # Apply convolutions
         conv_outputs = []
-        for conv_layer in self.conv_layers:
-            conv_out = conv_layer(embedded)  # (batch_size, num_filters)
-            if self.static_embeddings == "multichannel":
-                conv_out_multi = conv_layer(embedded_multi)
-                conv_out = torch.cat([conv_out, conv_out_multi], dim=1)
-            conv_outputs.append(conv_out)
+        if self.static_embeddings == "multichannel":
+            # embedded shape: (batch_size, 2, seq_len, embed_dim)
+            embedded_ch1 = embedded[:, 0, :, :]  # (batch_size, seq_len, embed_dim)
+            embedded_ch2 = embedded[:, 1, :, :]  # (batch_size, seq_len, embed_dim)
+
+            for conv_layer in self.conv_layers:
+                conv_out_ch1 = conv_layer(embedded_ch1)  # (batch_size, num_filters)
+                conv_out_ch2 = conv_layer(embedded_ch2)  # (batch_size, num_filters)
+                conv_out = torch.cat(
+                    [conv_out_ch1, conv_out_ch2], dim=1
+                )  # (batch_size, 2*num_filters)
+                conv_outputs.append(conv_out)
+        else:
+            for conv_layer in self.conv_layers:
+                conv_out = conv_layer(embedded)  # (batch_size, num_filters)
+                conv_outputs.append(conv_out)
 
         # Concatenate all conv outputs
         concat_output = torch.cat(
