@@ -136,7 +136,7 @@ class CNNSentenceClassifier(nn.Module):
         num_filters=100,
         num_classes=2,
         dropout_rate=0.5,
-        static_embeddings=False,
+        static_embeddings="static",
         pretrained_embeddings=None,
     ):
         super(CNNSentenceClassifier, self).__init__()
@@ -156,8 +156,14 @@ class CNNSentenceClassifier(nn.Module):
         self.embedding.weight.data[0].fill_(0)
 
         # Freeze embeddings if static
-        if static_embeddings:
+        if static_embeddings == "static":
             self.embedding.weight.requires_grad = False
+        elif static_embeddings == "multichannel":
+            self.embedding_multi = nn.Embedding(vocab_size, embed_dim, padding_idx=0)
+            self.embedding_multi.weight.data.copy_(
+                torch.from_numpy(pretrained_embeddings)
+            )
+            self.embedding_multi.weight.requires_grad = False
 
         # Convolutional layers
         self.conv_layers = nn.ModuleList(
@@ -182,15 +188,22 @@ class CNNSentenceClassifier(nn.Module):
 
         # Embedding lookup
         embedded = self.embedding(x)  # (batch_size, seq_len, embed_dim)
+        if self.embedding_multi == "multichannel":
+            embedded_multi = self.embedding_multi(x)
+            embedded_multi.weight.data[0].fill_(0)
+            embedded = torch.stack([embedded, embedded_multi], dim=1)
 
         # Reset padding embeddings to zero (for non-static case)
-        if not self.static_embeddings:
+        if self.static_embeddings == "nonstatic":
             self.embedding.weight.data[0].fill_(0)
 
         # Apply convolutions
         conv_outputs = []
         for conv_layer in self.conv_layers:
             conv_out = conv_layer(embedded)  # (batch_size, num_filters)
+            if self.embedding_multi == "multichannel":
+                conv_out_multi = conv_layer(embedded_multi)
+                conv_out = torch.cat([conv_out, conv_out_multi], dim=1)
             conv_outputs.append(conv_out)
 
         # Concatenate all conv outputs
