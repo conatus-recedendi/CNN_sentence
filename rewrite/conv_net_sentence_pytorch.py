@@ -399,7 +399,9 @@ def main():
         description="CNN for Sentence Classification (PyTorch)"
     )
     parser.add_argument("data_file", help="Pickled data file (mr.p)")
-    parser.add_argument("mode", choices=["static", "nonstatic"], help="Training mode")
+    parser.add_argument(
+        "mode", choices=["static", "nonstatic", "multichannel"], help="Training mode"
+    )
     parser.add_argument(
         "embeddings", choices=["rand", "word2vec"], help="Word embeddings to use"
     )
