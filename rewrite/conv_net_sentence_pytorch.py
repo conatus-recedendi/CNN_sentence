@@ -108,7 +108,7 @@ def train_conv_net_pytorch(
     device=None,
     word_idx_map=None,
     data_file=None,
-    embedding_type="word2vec",
+    embeddings_type="word2vec",
 ):
     """
     Train CNN using PyTorch
@@ -149,7 +149,7 @@ def train_conv_net_pytorch(
         dropout_rate=0.5,
         static_embeddings=static_embeddings,
         pretrained_embeddings=embeddings,
-        embeddings_type=embedding_type,
+        embeddings_type=embeddings_type,
     )
 
     model = model.to(device)
