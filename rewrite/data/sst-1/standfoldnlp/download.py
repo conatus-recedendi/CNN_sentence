@@ -265,6 +265,139 @@ sst = Sst()  # For easy access in other scripts such as setup.py, etc.
 
 # download data into train.csv and test.csv
 if __name__ == "__main__":
-    sst.download_and_extract()
+    import tempfile
+    import shutil
+    import urllib.request
+    import zipfile
+
+    print("Downloading SST dataset...")
+
+    # Create temporary directory for download
+    with tempfile.TemporaryDirectory() as temp_dir:
+        try:
+            # Manual download and processing
+            print("Downloading from Stanford...")
+            zip_path = os.path.join(temp_dir, "sst.zip")
+            urllib.request.urlretrieve(_DEFAULT_URL, zip_path)
+
+            print("Extracting files...")
+            with zipfile.ZipFile(zip_path, "r") as zip_ref:
+                zip_ref.extractall(temp_dir)
+
+            # Process the files manually
+            sst_dir = os.path.join(temp_dir, "stanfordSentimentTreebank")
+
+            # Read sentences and labels
+            sentences = {}
+            with open(
+                os.path.join(sst_dir, "datasetSentences.txt"), "r", encoding="utf-8"
+            ) as f:
+                next(f)  # Skip header
+                for line in f:
+                    parts = line.strip().split("\t")
+                    if len(parts) >= 2:
+                        idx = parts[0]
+                        sentence = "\t".join(parts[1:])
+                        # Clean sentence
+                        sentence = sentence.replace("-LRB-", "(").replace("-RRB-", ")")
+                        sentences[idx] = sentence
+
+            # Read splits
+            splits = {}
+            with open(
+                os.path.join(sst_dir, "datasetSplit.txt"), "r", encoding="utf-8"
+            ) as f:
+                next(f)  # Skip header
+                for line in f:
+                    parts = line.strip().split(",")
+                    if len(parts) >= 2:
+                        idx, split_id = parts[0], parts[1]
+                        splits[idx] = split_id
+
+            # Read phrase labels
+            phrase_labels = {}
+            with open(
+                os.path.join(sst_dir, "sentiment_labels.txt"), "r", encoding="utf-8"
+            ) as f:
+                next(f)  # Skip header
+                for line in f:
+                    parts = line.strip().split("|")
+                    if len(parts) >= 2:
+                        phrase_id, label = parts[0], float(parts[1])
+                        phrase_labels[phrase_id] = label
+
+            # Read phrase dictionary
+            phrase_dict = {}
+            with open(
+                os.path.join(sst_dir, "dictionary.txt"), "r", encoding="utf-8"
+            ) as f:
+                for line in f:
+                    parts = line.strip().split("|")
+                    if len(parts) >= 2:
+                        phrase, phrase_id = parts[0], parts[1]
+                        if phrase_id in phrase_labels:
+                            phrase_dict[phrase] = phrase_labels[phrase_id]
+
+            # Create datasets
+            train_data, val_data, test_data = [], [], []
+
+            for idx, sentence in sentences.items():
+                if idx in splits and sentence in phrase_dict:
+                    split_id = splits[idx]
+                    raw_label = phrase_dict[sentence]
+                    binary_label = int(raw_label > 0.5)
+
+                    data_point = [sentence, binary_label, raw_label]
+
+                    if split_id == "1":  # train
+                        train_data.append(data_point)
+                    elif split_id == "3":  # validation
+                        val_data.append(data_point)
+                    elif split_id == "2":  # test
+                        test_data.append(data_point)
+
+            # Save to CSV files
+            output_dir = os.path.dirname(os.path.abspath(__file__))
+
+            # Save train.csv
+            with open(
+                os.path.join(output_dir, "train.csv"), "w", encoding="utf-8", newline=""
+            ) as f:
+                writer = csv.writer(f)
+                writer.writerow(["text", "label", "raw_label"])  # header
+                writer.writerows(train_data)
+
+            # Save validation.csv
+            with open(
+                os.path.join(output_dir, "validation.csv"),
+                "w",
+                encoding="utf-8",
+                newline="",
+            ) as f:
+                writer = csv.writer(f)
+                writer.writerow(["text", "label", "raw_label"])  # header
+                writer.writerows(val_data)
+
+            # Save test.csv
+            with open(
+                os.path.join(output_dir, "test.csv"), "w", encoding="utf-8", newline=""
+            ) as f:
+                writer = csv.writer(f)
+                writer.writerow(["text", "label", "raw_label"])  # header
+                writer.writerows(test_data)
+
+            print(f"Download completed successfully!")
+            print(f"Train samples: {len(train_data)}")
+            print(f"Validation samples: {len(val_data)}")
+            print(f"Test samples: {len(test_data)}")
+            print(f"Files saved in: {output_dir}")
+            print("Files created: train.csv, validation.csv, test.csv")
+
+        except Exception as e:
+            print(f"Error downloading data: {e}")
+            import traceback
+
+            traceback.print_exc()
+
     print("Data downloaded and extracted.")
     print(sst.info)
