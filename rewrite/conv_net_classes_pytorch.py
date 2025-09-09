@@ -150,7 +150,14 @@ class CNNSentenceClassifier(nn.Module):
         if pretrained_embeddings is not None:
             self.embedding.weight.data.copy_(torch.from_numpy(pretrained_embeddings))
         else:
-            nn.init.uniform_(self.embedding.weight, -0.25, 0.25)
+            variance = (
+                pretrained_embeddings.std()
+                if pretrained_embeddings is not None
+                else 0.25
+            )
+            print("Embedding variance:", variance)
+
+            nn.init.uniform_(self.embedding.weight, -variance, variance)
 
         # Set padding token to zero
         self.embedding.weight.data[0].fill_(0)
