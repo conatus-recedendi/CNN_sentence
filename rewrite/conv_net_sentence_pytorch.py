@@ -508,7 +508,7 @@ def main():
         static_embeddings=static_embeddings,
         optimizer_type=args.optimizer,
         learning_rate=args.lr,
-        early_stopping_patience=5,
+        early_stopping_patience=10,
         word_idx_map=word_idx_map,
         device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
         data_file=args.data_file,
