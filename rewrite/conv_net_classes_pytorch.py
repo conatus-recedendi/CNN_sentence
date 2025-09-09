@@ -343,9 +343,9 @@ class CNNTrainer:
             val_losses.append(val_loss)
             val_accs.append(val_acc)
 
-            print(f"Epoch {epoch+1}/{num_epochs}:")
-            print(f"  Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f}")
-            print(f"  Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}")
+            # print(f"Epoch {epoch+1}/{num_epochs}:")
+            # print(f"  Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f}")
+            # print(f"  Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}")
 
             # Early stopping
             if val_acc > best_val_acc:
