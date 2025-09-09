@@ -155,7 +155,7 @@ class CNNSentenceClassifier(nn.Module):
                 if pretrained_embeddings is not None
                 else 0.25
             )
-            print("Embedding variance:", variance)
+            print("Embedding variance:", variance, file=sys.stderr)
 
             nn.init.uniform_(self.embedding.weight, -variance, variance)
 
