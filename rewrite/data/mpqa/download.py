@@ -18,7 +18,7 @@ if __name__ == "__main__":
     for example in ds["train"]:
         total.append((example["label"], example["sentence"]))
 
-    # random.shuffle(total)
+    random.shuffle(total)
     for i in range(len(total)):
         ran = random.randint(0, 10)
         if ran == 0:
