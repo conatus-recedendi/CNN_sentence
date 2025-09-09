@@ -188,7 +188,7 @@ class CNNSentenceClassifier(nn.Module):
 
         # Embedding lookup
         embedded = self.embedding(x)  # (batch_size, seq_len, embed_dim)
-        if self.embedding_multi == "multichannel":
+        if self.static_embeddings == "multichannel":
             embedded_multi = self.embedding_multi(x)
             embedded_multi.weight.data[0].fill_(0)
             embedded = torch.stack([embedded, embedded_multi], dim=1)
@@ -201,7 +201,7 @@ class CNNSentenceClassifier(nn.Module):
         conv_outputs = []
         for conv_layer in self.conv_layers:
             conv_out = conv_layer(embedded)  # (batch_size, num_filters)
-            if self.embedding_multi == "multichannel":
+            if self.static_embeddings == "multichannel":
                 conv_out_multi = conv_layer(embedded_multi)
                 conv_out = torch.cat([conv_out, conv_out_multi], dim=1)
             conv_outputs.append(conv_out)
