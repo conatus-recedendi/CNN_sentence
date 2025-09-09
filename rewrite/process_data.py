@@ -101,16 +101,14 @@ def load_bin_vec(fname, vocab):
     return word_vecs
 
 
-def add_unknown_words(word_vecs, vocab, min_df=1, k=300):
+def add_unknown_words(word_vecs, vocab, min_df=1, k=300, variance=0.25):
     """
     For words that occur in at least min_df documents, create a separate word vector.
     0.25 is chosen so the unknown vectors have (approximately) same variance as pre-trained ones
     """
     for word in vocab:
         if word not in word_vecs and vocab[word] >= min_df:
-            word_vecs[word] = np.random.uniform(
-                -0.03135904669761658, 0.03135904669761658, k
-            )
+            word_vecs[word] = np.random.uniform(-variance, variance, k)
 
 
 def clean_str(string, TREC=False):
@@ -167,10 +165,10 @@ if __name__ == "__main__":
     print(f"word2vec loaded! (variance: {variance})")
     print("word2vec loaded!")
     print("num words already in word2vec: " + str(len(w2v)))
-    add_unknown_words(w2v, vocab)
+    add_unknown_words(w2v, vocab, variance=variance)
     W, word_idx_map = get_W(w2v)
     rand_vecs = {}
-    add_unknown_words(rand_vecs, vocab)
+    add_unknown_words(rand_vecs, vocab, variance=variance)
     W2, _ = get_W(rand_vecs)
     pickle.dump([revs, W, W2, word_idx_map, vocab], open(output_file, "wb"))
     # print(W2[3])
