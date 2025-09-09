@@ -188,8 +188,10 @@ if __name__ == "__main__":
     print("max sentence length: " + str(max_l))
     print("loading word2vec vectors...", end="")
     w2v = load_bin_vec(w2v_file, vocab)
+
     # w2v's variance
-    variance = np.var(list(w2v.values()))
+    # variance = np.var(list(w2v.values()))
+    variance = get_variance_of_word_vectors(w2v_file)
     print(f"word2vec loaded! (variance: {variance})")
     print("word2vec loaded!")
     print("num words already in word2vec: " + str(len(w2v)))
