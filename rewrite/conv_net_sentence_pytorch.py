@@ -107,6 +107,7 @@ def train_conv_net_pytorch(
     early_stopping_patience=10,
     device=None,
     word_idx_map=None,
+    data_file=None,
 ):
     """
     Train CNN using PyTorch
@@ -228,32 +229,33 @@ def train_conv_net_pytorch(
     #     "!": ["2,500", "entire", "jez", "changer"],
     #     ",": ["decasia", "abysmally", "demise", "valiant"],
     # }
-    keywords = ["bad", "good", "n't", "!", ","]
-    # model.embedding.weight.detach()
-    for keyword in keywords:
-        keyword_idx = word_idx_map[keyword]
-        # find most similar words
-        min_dist = float("inf")
-        # top K = 5
-        topk = 5
-        most_similar = []
-        for other_word, other_idx in word_idx_map.items():
-            if other_word == keyword:
-                continue
-            dist = np.linalg.norm(
-                model.embedding.weight.detach()[keyword_idx].cpu().numpy()
-                - model.embedding.weight.detach()[other_idx].cpu().numpy()
+    if data_file == "sst-1.p":
+        keywords = ["bad", "good", "n't", "!", ","]
+        # model.embedding.weight.detach()
+        for keyword in keywords:
+            keyword_idx = word_idx_map[keyword]
+            # find most similar words
+            min_dist = float("inf")
+            # top K = 5
+            topk = 5
+            most_similar = []
+            for other_word, other_idx in word_idx_map.items():
+                if other_word == keyword:
+                    continue
+                dist = np.linalg.norm(
+                    model.embedding.weight.detach()[keyword_idx].cpu().numpy()
+                    - model.embedding.weight.detach()[other_idx].cpu().numpy()
+                )
+                if len(most_similar) < topk:
+                    most_similar.append((other_word, dist))
+                    most_similar.sort(key=lambda x: x[1])
+                elif dist < most_similar[-1][1]:
+                    most_similar[-1] = (other_word, dist)
+                    most_similar.sort(key=lambda x: x[1])
+            print(
+                f"Most similar words to '{keyword}': {[w for w, d in most_similar]}",
+                file=sys.stderr,
             )
-            if len(most_similar) < topk:
-                most_similar.append((other_word, dist))
-                most_similar.sort(key=lambda x: x[1])
-            elif dist < most_similar[-1][1]:
-                most_similar[-1] = (other_word, dist)
-                most_similar.sort(key=lambda x: x[1])
-        print(
-            f"Most similar words to '{keyword}': {[w for w, d in most_similar]}",
-            file=sys.stderr,
-        )
 
     return test_accuracy
 
@@ -507,6 +509,7 @@ def main():
         early_stopping_patience=5,
         word_idx_map=word_idx_map,
         device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
+        data_file=args.data_file,
     )
 
     print(f"Final test performance: {perf:.4f}")
