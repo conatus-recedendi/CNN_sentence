@@ -145,7 +145,7 @@ if __name__ == "__main__":
     w2v_file = sys.argv[1]
     output_file = sys.argv[2]  # trec.p
     data_folder = sys.argv[3:]
-    print("loading data...", end="")
+    print(f"loading data...: {data_folder}", end="", file=sys.stderr)
     revs, vocab = build_data_cv(
         data_folder,
         cv=10,
