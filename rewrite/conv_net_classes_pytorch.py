@@ -139,6 +139,7 @@ class CNNSentenceClassifier(nn.Module):
         dropout_rate=0.5,
         static_embeddings="static",
         pretrained_embeddings=None,
+        embeddings_type="word2vec",
     ):
         super(CNNSentenceClassifier, self).__init__()
 
@@ -148,7 +149,7 @@ class CNNSentenceClassifier(nn.Module):
         self.embedding = nn.Embedding(vocab_size, embed_dim, padding_idx=0)
 
         # Initialize embeddings
-        if pretrained_embeddings is not None:
+        if embeddings_type == "word2vec":
             self.embedding.weight.data.copy_(torch.from_numpy(pretrained_embeddings))
         else:
             variance = (

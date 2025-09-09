@@ -108,6 +108,7 @@ def train_conv_net_pytorch(
     device=None,
     word_idx_map=None,
     data_file=None,
+    embedding_type="word2vec",
 ):
     """
     Train CNN using PyTorch
@@ -148,6 +149,7 @@ def train_conv_net_pytorch(
         dropout_rate=0.5,
         static_embeddings=static_embeddings,
         pretrained_embeddings=embeddings,
+        embeddings_type=embedding_type,
     )
 
     model = model.to(device)
@@ -229,7 +231,7 @@ def train_conv_net_pytorch(
     #     "!": ["2,500", "entire", "jez", "changer"],
     #     ",": ["decasia", "abysmally", "demise", "valiant"],
     # }
-    if data_file == "sst-1.p":
+    if data_file == "sst-2.p":
         keywords = ["bad", "good", "n't", "!", ","]
         # model.embedding.weight.detach()
         for keyword in keywords:
@@ -510,6 +512,7 @@ def main():
         word_idx_map=word_idx_map,
         device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
         data_file=args.data_file,
+        embeddings_type=args.embeddings,
     )
 
     print(f"Final test performance: {perf:.4f}")
