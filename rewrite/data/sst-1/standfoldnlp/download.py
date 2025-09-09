@@ -259,3 +259,10 @@ class Sst(datasets.GeneratorBasedBuilder):
                             "tokens": tokens,
                             "tree": parse_tree,
                         }
+
+
+sst = Sst()  # For easy access in other scripts such as setup.py, etc.
+
+# download data
+if __name__ == "__main__":
+    sst.download_and_prepare()
