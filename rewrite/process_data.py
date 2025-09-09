@@ -192,7 +192,7 @@ if __name__ == "__main__":
     # w2v's variance
     variance = np.var(list(w2v.values()))
     # variance = get_variance_of_word_vectors(w2v_file)
-    print(f"word2vec loaded! (variance: {variance})")
+    print(f"word2vec loaded! (variance: {variance})")  # 0.017729217186570168
     print("word2vec loaded!")
     print("num words already in word2vec: " + str(len(w2v)))
     add_unknown_words(w2v, vocab, variance=variance)
