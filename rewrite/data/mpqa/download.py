@@ -10,16 +10,34 @@ if __name__ == "__main__":
     test = []
     train = []
     valid = []
+    # no test/train split
 
+    total = []
     for example in ds["test"]:
-        test.append((example["label"], example["sentence"]))
-
+        total.append((example["label"], example["sentence"]))
     for example in ds["train"]:
+        total.append((example["label"], example["sentence"]))
+
+    # random.shuffle(total)
+    for i in range(len(total)):
         ran = random.randint(0, 10)
         if ran == 0:
-            valid.append((example["label"], example["sentence"]))
+            test.append((total[i][0], total[i][1]))
         else:
-            train.append((example["label"], example["sentence"]))
+            ran = random.randint(0, 10)
+            if ran == 0:
+                valid.append((total[i][0], total[i][1]))
+            else:
+                train.append((total[i][0], total[i][1]))
+    # for example in ds["test"]:
+    #     test.append((example["label"], example["sentence"]))
+
+    # for example in ds["train"]:
+    #     ran = random.randint(0, 10)
+    #     if ran == 0:
+    #         valid.append((example["label"], example["sentence"]))
+    #     else:
+    #         train.append((example["label"], example["sentence"]))
 
     df_train = pd.DataFrame(train, columns=["label", "text"])
     df_test = pd.DataFrame(test, columns=["label", "text"])
