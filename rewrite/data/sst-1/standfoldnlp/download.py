@@ -263,6 +263,8 @@ class Sst(datasets.GeneratorBasedBuilder):
 
 sst = Sst()  # For easy access in other scripts such as setup.py, etc.
 
-# download data
+# download data into train.csv and test.csv
 if __name__ == "__main__":
-    sst.download_and_prepare()
+    sst.download_and_extract()
+    print("Data downloaded and extracted.")
+    print(sst.info)
