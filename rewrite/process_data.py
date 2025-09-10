@@ -18,8 +18,13 @@ def build_data_cv(data_files, cv=10, clean_string=True, TREC=False):
             for line in f:
                 left, right = line.split(",", 1)
                 rev = []
-                rev.append(right.strip())
-                print(right.strip())
+                stripped = right.strip()
+
+                # remove if  right.strip() is closed with " "
+                if stripped.startswith('"') and stripped.endswith('"'):
+                    # rev[0] = stripped[1:-1].strip()
+                    stripped = stripped[1:-1].strip()
+                rev.append(stripped)
                 if clean_string:
                     orig_rev = clean_str(" ".join(rev), TREC=TREC)
                 else:
