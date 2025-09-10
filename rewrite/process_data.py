@@ -198,8 +198,8 @@ if __name__ == "__main__":
     w2v = load_bin_vec(w2v_file, vocab)
 
     # w2v's variance
-    variance = np.std(list(w2v.values()))
-    # variance = 0.25
+    # variance = np.std(list(w2v.values()))
+    variance = 0.25
     # variance = get_variance_of_word_vectors(w2v_file)
     print(f"word2vec loaded! (variance: {variance})")  # 0.017729217186570168
     print("word2vec loaded!")
