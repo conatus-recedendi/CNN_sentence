@@ -475,13 +475,13 @@ def main():
     # Prepare train/validation data from pickle
     print("\nPreparing train/validation data from pickle...")
     train_val_datasets = make_idx_data_splits(
-        revs, word_idx_map, max_l=100, k=300, filter_h=5
+        revs, word_idx_map, max_l=50, k=300, filter_h=5
     )
 
     # Load test data from separate CSV file
     print(f"Loading test data from {args.test_file}...")
     test_data = load_test_data(
-        args.test_file, word_idx_map, max_l=100, k=300, filter_h=5
+        args.test_file, word_idx_map, max_l=50, k=300, filter_h=5
     )
     print(train_val_datasets[0].shape, train_val_datasets[1].shape)
     if test_data is not None:
