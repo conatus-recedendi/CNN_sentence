@@ -322,9 +322,9 @@ def make_idx_data_splits(revs, word_idx_map, max_l=51, k=300, filter_h=5):
     for rev in revs:
         sent = get_idx_from_sent(rev["text"], word_idx_map, max_l, k, filter_h)
         sent.append(rev["y"])
-        print(
-            f"Sentence: {rev['text']}, Length: {len(rev['text'].split())}, Split: {rev['split']}"
-        )
+        # print(
+        #     f"Sentence: {rev['text']}, Length: {len(rev['text'].split())}, Split: {rev['split']}"
+        # )
 
         # 원래 논문에서는 split=0이 첫 번째 fold이므로 train으로 사용
         if rev["split"] == 0:
