@@ -42,7 +42,7 @@ def tokenize(s: str):
     return token_re.findall(str(s).lower())
 
 
-def stats_for_dataset(ds_dir: Path, embeddings_vocab: set | None):
+def stats_for_dataset(ds_dir: Path, embeddings_vocab):
     train = read_split_csv(ds_dir / "train.csv")
     test = read_split_csv(ds_dir / "test.csv")
     valid = read_split_csv(ds_dir / "validation.csv")
@@ -55,16 +55,17 @@ def stats_for_dataset(ds_dir: Path, embeddings_vocab: set | None):
     # Dataset size (train+test)
     N = int(len(all_df))
     # Vocabulary from combined
-    vocab = set()
+    vocab = {}
     for t in all_df["text"]:
         vocab.update(tokenize(t))
     V = len(vocab)
     # |Vpre| (intersect with embeddings vocab) if provided
-    Vpre = len(vocab & embeddings_vocab) if embeddings_vocab is not None else None
+    #
+    Vpre = len(vocab.keys() & embeddings_vocab.keys())
     print(len(vocab))
     print(len(embeddings_vocab))
-    print(len(vocab & embeddings_vocab))
-    print(vocab, embeddings_vocab, vocab & embeddings_vocab)
+    print(len(Vpre))
+    # print(vocab, embeddings_vocab, vocab & embeddings_vocab)
     # Test column formatted as "CV(n)"
     test_size = int(len(test))
     Test = f"CV({test_size})"
@@ -84,7 +85,7 @@ def load_bin_vec(fname):
     """
     Loads 300x1 word vecs from Google (Mikolov) word2vec
     """
-    word_vecs = set()
+    word_vecs = {}
     with open(fname, "rb") as f:
         header = f.readline()
         vocab_size, layer1_size = map(int, header.split())
@@ -99,8 +100,10 @@ def load_bin_vec(fname):
                 if ch != b"\n":
                     word.append(ch)
             # if word in vocab:
+            word = word.decode("utf-8", errors="ignore")
             # word_vecs[word] = np.frombuffer(f.read(binary_len), dtype="float32")
-            word_vecs.add(word.decode("utf-8", errors="ignore"))
+            # word_vecs.add(word.decode("utf-8", errors="ignore"))
+            word_vecs[word] = np.frombuffer(f.read(binary_len), dtype="float32")
             # else:
             #     f.read(binary_len)
     return word_vecs
