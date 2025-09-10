@@ -61,6 +61,10 @@ def stats_for_dataset(ds_dir: Path, embeddings_vocab: set | None):
     V = len(vocab)
     # |Vpre| (intersect with embeddings vocab) if provided
     Vpre = len(vocab & embeddings_vocab) if embeddings_vocab is not None else None
+    print(len(vocab))
+    print(len(embeddings_vocab))
+    print(len(vocab & embeddings_vocab))
+    print(vocab, embeddings_vocab, vocab & embeddings_vocab)
     # Test column formatted as "CV(n)"
     test_size = int(len(test))
     Test = f"CV({test_size})"
