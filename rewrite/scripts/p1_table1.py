@@ -71,7 +71,8 @@ def stats_for_dataset(ds_dir: Path, embeddings_vocab):
     Vpre = len(vocab.keys() & embeddings_vocab.keys())
     print(len(vocab))
     print(len(embeddings_vocab))
-    print(len(Vpre))
+    # print(len(Vpre))
+    print(Vpre)
     # print(vocab, embeddings_vocab, vocab & embeddings_vocab)
     # Test column formatted as "CV(n)"
     test_size = int(len(test))
