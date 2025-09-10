@@ -193,6 +193,7 @@ if __name__ == "__main__":
     print("number of sentences: " + str(len(revs)))
     print("vocab size: " + str(len(vocab)))
     print("max sentence length: " + str(max_l))
+    print("average sentence length: " + str(np.mean(pd.DataFrame(revs)["num_words"])))
     print("loading word2vec vectors...", end="")
     w2v = load_bin_vec(w2v_file, vocab)
 

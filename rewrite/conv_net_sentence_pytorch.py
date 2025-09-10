@@ -109,7 +109,6 @@ def train_conv_net_pytorch(
     word_idx_map=None,
     data_file=None,
     embeddings_type="word2vec",
-    dataset_params=None,
 ):
     """
     Train CNN using PyTorch
@@ -404,44 +403,44 @@ def get_dataset_specific_params(data_file, num_classes, vocab_size):
     Get dataset-specific hyperparameters
     """
     params = {
-        'filter_sizes': [3, 4, 5],
-        'num_filters': 100,
-        'dropout_rate': 0.5,
-        'learning_rate': 1.0,
-        'batch_size': 50,
-        'early_stopping_patience': 10
+        "filter_sizes": [3, 4, 5],
+        "num_filters": 100,
+        "dropout_rate": 0.5,
+        "learning_rate": 1.0,
+        "batch_size": 50,
+        "early_stopping_patience": 10,
     }
-    
+
     # Dataset-specific adjustments
-    if 'mpqa' in data_file.lower():
+    if "mpqa" in data_file.lower():
         # MPQA is more complex, needs more regularization
-        params['dropout_rate'] = 0.7
-        params['learning_rate'] = 0.5
-        params['num_filters'] = 150
-        params['early_stopping_patience'] = 15
-    elif 'subj' in data_file.lower():
+        params["dropout_rate"] = 0.7
+        params["learning_rate"] = 0.5
+        params["num_filters"] = 150
+        params["early_stopping_patience"] = 15
+    elif "subj" in data_file.lower():
         # Subjectivity dataset
-        params['dropout_rate'] = 0.3
-        params['num_filters'] = 100
-    elif 'trec' in data_file.lower():
+        params["dropout_rate"] = 0.3
+        params["num_filters"] = 100
+    elif "trec" in data_file.lower():
         # TREC has 6 classes, needs different architecture
-        params['num_filters'] = 200
-        params['dropout_rate'] = 0.6
-        params['learning_rate'] = 0.8
-    elif 'sst' in data_file.lower():
+        params["num_filters"] = 200
+        params["dropout_rate"] = 0.6
+        params["learning_rate"] = 0.8
+    elif "sst" in data_file.lower():
         # SST dataset
         if num_classes == 5:  # SST-5
-            params['num_filters'] = 150
-            params['dropout_rate'] = 0.6
-            params['learning_rate'] = 0.8
+            params["num_filters"] = 150
+            params["dropout_rate"] = 0.6
+            params["learning_rate"] = 0.8
         else:  # SST-2
-            params['dropout_rate'] = 0.5
-            params['num_filters'] = 100
-    
+            params["dropout_rate"] = 0.5
+            params["num_filters"] = 100
+
     # Adjust based on vocabulary size
     if vocab_size > 20000:
-        params['dropout_rate'] = min(params['dropout_rate'] + 0.1, 0.8)
-    
+        params["dropout_rate"] = min(params["dropout_rate"] + 0.1, 0.8)
+
     return params
 
 
@@ -489,17 +488,19 @@ def main():
     num_classes = len(unique_labels)
     print(f"Number of classes: {num_classes} (labels: {sorted(unique_labels)})")
     print(f"Data: {args.data_file}", file=sys.stderr)
-    
+
     # Get dataset-specific parameters
-    dataset_params = get_dataset_specific_params(args.data_file, num_classes, len(vocab))
+    dataset_params = get_dataset_specific_params(
+        args.data_file, num_classes, len(vocab)
+    )
     print(f"Dataset-specific params: {dataset_params}")
-    
+
     # Override with dataset-specific values if not provided by user
     if args.batch_size == 50:  # default value
-        args.batch_size = dataset_params['batch_size']
+        args.batch_size = dataset_params["batch_size"]
     if args.lr == 1.0:  # default value
-        args.lr = dataset_params['learning_rate']
-    
+        args.lr = dataset_params["learning_rate"]
+
     # Set model parameters
     if args.mode == "nonstatic":
         print("Model architecture: CNN-non-static")
@@ -532,12 +533,14 @@ def main():
     max_sentence_length = max(actual_lengths)
     mean_length = np.mean(actual_lengths)
     std_length = np.std(actual_lengths)
-    
+
     # Use 95th percentile or mean + 2*std to avoid extreme outliers
     percentile_95 = np.percentile(actual_lengths, 95)
-    optimal_max_l = min(int(mean_length + 2 * std_length), percentile_95, max_sentence_length)
+    optimal_max_l = min(
+        int(mean_length + 2 * std_length), percentile_95, max_sentence_length
+    )
     optimal_max_l = max(optimal_max_l, 50)  # minimum 50
-    
+
     print(f"Sentence length stats:")
     print(f"  Mean: {mean_length:.1f}, Std: {std_length:.1f}")
     print(f"  Max: {max_sentence_length}, 95th percentile: {percentile_95:.1f}")
@@ -582,7 +585,7 @@ def main():
         static_embeddings=static_embeddings,
         optimizer_type=args.optimizer,
         learning_rate=args.lr,
-        early_stopping_patience=dataset_params['early_stopping_patience'],
+        early_stopping_patience=dataset_params["early_stopping_patience"],
         word_idx_map=word_idx_map,
         device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
         data_file=args.data_file,
