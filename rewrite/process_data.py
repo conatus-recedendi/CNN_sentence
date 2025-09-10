@@ -131,7 +131,8 @@ def get_variance_of_word_vectors(fname):
             word = word.decode("utf-8")
             word_vecs[word] = np.frombuffer(f.read(binary_len), dtype="float32")
     print(f"Loaded {len(word_vecs)} word vectors.")
-    return np.var(list(word_vecs.values()))
+    # return np.var(list(word_vecs.values()))
+    return np.std(list(word_vecs.values()))
     # return word_vecs
 
 
