@@ -19,6 +19,7 @@ def build_data_cv(data_files, cv=10, clean_string=True, TREC=False):
                 left, right = line.split(",", 1)
                 rev = []
                 rev.append(right.strip())
+                print(right.strip())
                 if clean_string:
                     orig_rev = clean_str(" ".join(rev), TREC=TREC)
                 else:
