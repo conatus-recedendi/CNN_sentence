@@ -57,7 +57,14 @@ def stats_for_dataset(ds_dir: Path, embeddings_vocab):
     # Vocabulary from combined
     vocab = {}
     for t in all_df["text"]:
-        vocab.update(tokenize(t))
+        # vocab.update(tokenize(t))
+        token = tokenize(t)
+        for w in token:
+            if w in vocab:
+                vocab[w] += 1
+            else:
+                vocab[w] = 1
+
     V = len(vocab)
     # |Vpre| (intersect with embeddings vocab) if provided
     #
