@@ -103,6 +103,10 @@ def load_bin_vec(fname, vocab):
                 word_vecs[word] = np.frombuffer(f.read(binary_len), dtype="float32")
             else:
                 f.read(binary_len)
+
+    # normalize word_vecs
+    for word in word_vecs:
+        word_vecs[word] = word_vecs[word] / np.linalg.norm(word_vecs[word])
     print(f"Loaded {len(word_vecs)} word vectors.")
     return word_vecs
 
