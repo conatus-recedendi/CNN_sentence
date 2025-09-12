@@ -417,7 +417,7 @@ def main():
     )
     parser.add_argument("--epochs", type=int, default=25, help="Number of epochs")
     parser.add_argument("--batch-size", type=int, default=50, help="Batch size")
-    parser.add_argument("--lr", type=float, default=0.1, help="Learning rate")
+    parser.add_argument("--lr", type=float, default=0.5, help="Learning rate")
     parser.add_argument(
         "--optimizer",
         choices=["adadelta", "adam", "sgd"],
