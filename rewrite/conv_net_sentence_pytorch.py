@@ -58,6 +58,9 @@ def prepare_data(datasets, batch_size=50):
     # Convert to lists of sentences and labels
     train_sentences = train_data[:, :-1].tolist()
     train_labels = train_data[:, -1].tolist()
+    print(train_sentences[0])
+    # get enter
+    input()
 
     test_sentences = test_data[:, :-1].tolist()
     test_labels = test_data[:, -1].tolist()
