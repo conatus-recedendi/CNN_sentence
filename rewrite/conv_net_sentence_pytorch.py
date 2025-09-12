@@ -105,7 +105,7 @@ def train_conv_net_pytorch(
     n_epochs=25,
     static_embeddings="nonstatic",
     optimizer_type="adadelta",
-    learning_rate=1.0,
+    learning_rate=0.1,
     clip_grad_norm=3.0,
     early_stopping_patience=10,
     device=None,
