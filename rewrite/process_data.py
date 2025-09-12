@@ -5,7 +5,7 @@ import sys, re
 import pandas as pd
 
 
-def build_data_cv(data_files, cv=10, clean_string=True, TREC=False):
+def build_data_cv(data_files, cv=10, clean_string=True, TREC=False, SST=False):
     """
     Loads data and split into 10 folds.
     """
@@ -26,7 +26,7 @@ def build_data_cv(data_files, cv=10, clean_string=True, TREC=False):
                     stripped = stripped[1:-1].strip()
                 rev.append(stripped)
                 if clean_string:
-                    orig_rev = clean_str(" ".join(rev), TREC=TREC)
+                    orig_rev = clean_str(" ".join(rev), TREC=TREC, SST=SST)
                 else:
                     orig_rev = " ".join(rev).lower()
                 words = set(orig_rev.split())
@@ -150,11 +150,13 @@ def add_unknown_words(word_vecs, vocab, min_df=1, k=300, variance=0.25):  #
             word_vecs[word] = np.random.uniform(-variance, variance, k)
 
 
-def clean_str(string, TREC=False):
+def clean_str(string, TREC=False, SST=False):
     """
     Tokenization/string cleaning for all datasets except for SST.
     Every dataset is lower cased except for TREC
     """
+    if SST:
+        return clean_str_sst(string)
     string = re.sub(r"[^A-Za-z0-9(),!?\'\`]", " ", string)
     string = re.sub(r"\'s", " 's", string)
     string = re.sub(r"\'ve", " 've", string)
@@ -190,6 +192,7 @@ if __name__ == "__main__":
         data_folder,
         cv=10,
         clean_string=True,
+        SST=output_file.lower().startswith("sst"),
         TREC=output_file.lower().startswith("trec"),
     )
     max_l = np.max(pd.DataFrame(revs)["num_words"])
