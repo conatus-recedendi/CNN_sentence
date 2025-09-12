@@ -58,9 +58,9 @@ def prepare_data(datasets, batch_size=50):
     # Convert to lists of sentences and labels
     train_sentences = train_data[:, :-1].tolist()
     train_labels = train_data[:, -1].tolist()
-    print(train_sentences[0])
+    # print(train_sentences[0])
     # get enter
-    input()
+    # input()
 
     test_sentences = test_data[:, :-1].tolist()
     test_labels = test_data[:, -1].tolist()
@@ -439,6 +439,12 @@ def main():
         x = pickle.load(f)
     revs, W, W2, word_idx_map, vocab = x[0], x[1], x[2], x[3], x[4]
     print("data loaded!")
+
+    # save into word_idx_map to json now
+    with open("word_idx_map.json", "w", encoding="utf-8") as f:
+        import json
+
+        json.dump(word_idx_map, f, ensure_ascii=False, indent=4)
 
     print(f"Number of sentences: {len(revs)}")
     print(f"Vocabulary size: {len(vocab)}")
