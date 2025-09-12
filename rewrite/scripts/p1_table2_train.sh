@@ -20,13 +20,13 @@ for d in ${DATA[@]}; do
     python process_data.py GoogleNews-vectors-negative300.bin $d.p ./data/$d/train.csv ./data/$d/validation.csv 
 
     echo "CNN-rand"
-    python conv_net_sentence_pytorch.py $d.p nonstatic rand --test-file ./data/$d/test.csv --epochs 25
+    python conv_net_sentence_pytorch.py $d.p nonstatic rand --test-file ./data/$d/test.csv --epochs 25 --lr 0.5
     echo "CNN-static"
-    python conv_net_sentence_pytorch.py $d.p static word2vec --test-file ./data/$d/test.csv --epochs 25
+    python conv_net_sentence_pytorch.py $d.p static word2vec --test-file ./data/$d/test.csv --epochs 25 --lr 0.5
     echo "CNN-non-static"
-    python conv_net_sentence_pytorch.py $d.p nonstatic word2vec --test-file ./data/$d/test.csv --epochs 25
+    python conv_net_sentence_pytorch.py $d.p nonstatic word2vec --test-file ./data/$d/test.csv --epochs 25 --lr 0.5
     echo "CNN-multichannel"
-    python conv_net_sentence_pytorch.py $d.p multichannel word2vec --test-file ./data/$d/test.csv --epochs 25
+    python conv_net_sentence_pytorch.py $d.p multichannel word2vec --test-file ./data/$d/test.csv --epochs 25 --lr 0.5
 
 done
 
